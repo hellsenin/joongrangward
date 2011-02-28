@@ -9,6 +9,7 @@
     <typeAlias  alias="Question2" 			type="egovframework.kr.go.geumcheon.health.vo.Question2"/>
     <typeAlias  alias="Answer" 				type="egovframework.kr.go.geumcheon.health.vo.Answer"/>
     <typeAlias  alias="Handleitem" 			type="egovframework.kr.go.geumcheon.health.vo.Handleitem"/>
+	<typeAlias  alias="zvl" type="egovframework.kr.go.geumcheon.health.util.ZValue"/>
     
     
    	<resultMap id="Company" 			class="Company">
