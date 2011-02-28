@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	
+	<!-- 자율점검 -->
+	<sqlMap resource="egovframework/sqlmap/kr/go/geumcheon/health/Freecheck_SQL_mssql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/geumcheon/health/Freecheck_User_SQL_mssql.xml"/>
+</sqlMapConfig>
