@@ -40,10 +40,10 @@ public class FreecheckUserController {
 		, HttpServletResponse response 
 		, ModelMap model) throws Exception {
 		
-		String includePage = "/health/dev_content/freecheck/login.jsp";
+		String includePage = "health/dev_content/freecheck/login";
 
 		model.addAttribute("includePage", includePage);
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 
 	@RequestMapping("/health/freecheck/login.do")
@@ -90,11 +90,11 @@ public class FreecheckUserController {
 		// 점검표 리스트 불러오기
 		service.selectCheckStateList(company, model);
 		
-		String includePage = "/health/dev_content/freecheck/list.jsp";
+		String includePage = "/health/dev_content/freecheck/list";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 	
 	@RequestMapping("/health/freecheck/view.do")
@@ -118,11 +118,11 @@ public class FreecheckUserController {
 		service.selectCheckStateView(bean, model);
 		
 		
-		String includePage = "/health/dev_content/freecheck/view.jsp";
+		String includePage = "/health/dev_content/freecheck/view";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 
 	@RequestMapping("/health/freecheck/forCheck.do")
@@ -148,10 +148,10 @@ public class FreecheckUserController {
 		// 업소 정보 불러오기 
 		service.selectCompanyInfo(bean, model);
 		
-		String includePage = "/health/dev_content/freecheck/check.jsp";
+		String includePage = "/health/dev_content/freecheck/check";
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 
 	@RequestMapping("/health/freecheck/check.do")
@@ -203,7 +203,7 @@ public class FreecheckUserController {
 			{
 				List<ZValue> handleItemList = service.selectHandleitemListU(company);
 				model.addAttribute("handleItemList", handleItemList);
-				includePage = "/health/dev_content/freecheck/drugList.jsp";
+				includePage = "/health/dev_content/freecheck/drugList";
 			}
 			else
 			{
@@ -224,7 +224,7 @@ public class FreecheckUserController {
 				
 				model.addAttribute("Bean", param);
 				
-				includePage = "/health/dev_content/freecheck/list.jsp";	
+				includePage = "/health/dev_content/freecheck/list";	
 				model.addAttribute("view_state", "checked");
 			}
 		} 
@@ -232,7 +232,7 @@ public class FreecheckUserController {
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 	
 
@@ -376,11 +376,11 @@ public class FreecheckUserController {
 		service.selectFreecheckInfoList(bean, model);
 		model.addAttribute("Bean", bean);
 		
-		String includePage = "/health/dev_content/freecheck/list_info.jsp";
+		String includePage = "/health/dev_content/freecheck/list_info";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 	
 
@@ -395,11 +395,11 @@ public class FreecheckUserController {
 		service.selectFreecheckInfo(bean, model);
 		model.addAttribute("Bean", bean);
 		
-		String includePage = "/health/dev_content/freecheck/read_info.jsp";
+		String includePage = "/health/dev_content/freecheck/read_info";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 	
 
@@ -475,10 +475,10 @@ public class FreecheckUserController {
 		, HttpServletResponse response 
 		, ModelMap model) throws Exception {
 		
-		String includePage = "/health/dev_content/freecheck/drugList.jsp";
+		String includePage = "/health/dev_content/freecheck/drugList";
 
 		model.addAttribute("includePage", includePage);
-		return Globals.HEALTH_MAIN_PAGE;
+		return includePage;
 	}
 
 }
