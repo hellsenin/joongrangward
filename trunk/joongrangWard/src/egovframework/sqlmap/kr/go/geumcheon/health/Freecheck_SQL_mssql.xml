@@ -10,6 +10,7 @@
     <typeAlias  alias="Question2" 		type="egovframework.kr.go.geumcheon.health.vo.Question2"/>
     <typeAlias  alias="Handleitem" 		type="egovframework.kr.go.geumcheon.health.vo.Handleitem"/>
     <typeAlias  alias="String" 			type="java.lang.String"/>
+	<typeAlias  alias="zvl" type="egovframework.kr.go.geumcheon.health.util.ZValue"/>
 	    
     
    	<resultMap id="IndustryList" 		class="Industry">
