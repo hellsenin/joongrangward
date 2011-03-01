@@ -163,8 +163,9 @@
 	
 	<!-- 업종 리스트에서 보여질 수 있는 총 갯수 (페이징 처리) -->
 	<select id="FreecheckAdminDAO.selectIndustryListTotCnt" parameterClass="Industry" resultClass="int">
+	/* FreecheckAdminDAO.selectIndustryListTotCnt */
 		<![CDATA[
-			SELECT	NVL(COUNT(*),0) AS CNT 
+			SELECT	ISNULL(COUNT(*),0) AS CNT 
 			FROM	HETB_CK_INDUSTRY 
 			WHERE	STATUS = 'N' 
 		]]>
@@ -180,17 +181,18 @@
 	
 	<!-- 업종 리스트에서 총 업소 갯수 -->
 	<select id="FreecheckAdminDAO.selectIndustryListTotCnt2" parameterClass="Industry" resultClass="int">
+	/* FreecheckAdminDAO.selectIndustryListTotCnt2 */
 		<![CDATA[
-			SELECT	NVL(SUM(INDUSTRY_CNT),0) AS CNT 
-			FROM	HETB_CK_INDUSTRY A,
-					(
-						SELECT	INDUSTRY_CD, COUNT(*) INDUSTRY_CNT 
-						FROM	HETB_CK_COMPANY 
-						WHERE	STATUS = 'N'
-						GROUP BY INDUSTRY_CD
-		 			) B
+			SELECT	ISNULL(SUM(INDUSTRY_CNT),0) AS CNT 
+			FROM	HETB_CK_INDUSTRY A
+					RIGHT OUTER JOIN (
+										SELECT	INDUSTRY_CD, COUNT(*) INDUSTRY_CNT 
+										FROM	HETB_CK_COMPANY 
+										WHERE	STATUS = 'N'
+										GROUP BY INDUSTRY_CD
+						 			 ) B
+						ON A.INDUSTRY_CD = B.INDUSTRY_CD
 			WHERE	A.STATUS = 'N'
-					AND A.INDUSTRY_CD = B.INDUSTRY_CD(+)
 		]]>
 		
 		
@@ -204,28 +206,30 @@
 	
 	<!-- 업종 관리 (조회) -->
 	<select id="FreecheckAdminDAO.selectIndustryList" parameterClass="Industry" resultMap="IndustryList">
+	/* FreecheckAdminDAO.selectIndustryList */
 		<![CDATA[
-			SELECT  * 
+			SELECT  A.* 
 				FROM  (
-					SELECT ROWNUM AS RNUM, ALL_LIST.* 
+					SELECT ROW_NUMBER() OVER(ORDER BY ALL_LIST.DIVIDE_CD ASC, INDUSTRY_CD ASC) RNUM
+					     , ALL_LIST.* 
 					FROM  (
 				 		SELECT	A.INDUSTRY_CD
 								, A.DIVIDE_CD
 								, A.NAME
 								, A.USE_YN
-								, DECODE(A.USE_YN, 'Y', '정상', 'N', '폐업') USE_YN_NAME
+								, CASE A.USE_YN WHEN 'Y' THEN '정상' WHEN 'N' THEN '폐업' END USE_YN_NAME
 								, INSERT_DT
-								, NVL(B.INDUSTRY_CNT, 0) INDUSTRY_CNT
+								, ISNULL(B.INDUSTRY_CNT, 0) INDUSTRY_CNT
 								, A.YEAR_CD
-						FROM	HETB_CK_INDUSTRY A,
-							(
-								SELECT	INDUSTRY_CD, COUNT(*) INDUSTRY_CNT 
-								FROM	HETB_CK_COMPANY 
-								WHERE	STATUS = 'N'
-								GROUP BY INDUSTRY_CD
-				 			) B
+						FROM	HETB_CK_INDUSTRY A
+								RIGHT OUTER JOIN (
+													SELECT	INDUSTRY_CD, COUNT(*) INDUSTRY_CNT 
+													FROM	HETB_CK_COMPANY 
+													WHERE	STATUS = 'N'
+													GROUP BY INDUSTRY_CD
+									 			 ) B
+									ON A.INDUSTRY_CD = B.INDUSTRY_CD
 				 		WHERE 	A.STATUS = 'N' 
-								AND A.INDUSTRY_CD = B.INDUSTRY_CD(+)
 		]]>
 		
 		
@@ -236,16 +240,15 @@
 		</isEqual>
 		
 		<![CDATA[
-					ORDER BY	A.DIVIDE_CD ASC, INDUSTRY_CD ASC
 					) ALL_LIST
-				) 
-			 WHERE  RNUM > 0
-			   AND  RNUM <= 10000
+				) A
+			 WHERE  A.RNUM > 0 AND  A.RNUM <= 10000
 		]]>
 	</select>
 	
 	
 	<select id="FreecheckAdminDAO.selectIndustryListForSelection" parameterClass="Industry" resultMap="IndustryListForSelection">
+	/* FreecheckAdminDAO.selectIndustryListForSelection */
 		<![CDATA[
 			SELECT	A.INDUSTRY_CD
 					, A.DIVIDE_CD
@@ -259,12 +262,13 @@
 	
 	<!-- 업종 관리 (조회) -->
 	<select id="FreecheckAdminDAO.selectIndustry" parameterClass="Industry" resultMap="Industry">
+	/* FreecheckAdminDAO.selectIndustry */
 		<![CDATA[
 			SELECT	A.INDUSTRY_CD
 					, A.DIVIDE_CD
 					, A.NAME
 					, A.USE_YN
-					, DECODE(A.USE_YN, 'Y', '', 'N', '') AS USE_YN_NAME
+					, CASE A.USE_YN WHEN 'Y' THEN '' WHEN 'N' THEN '' END USE_YN_NAME
 					, A.INSERT_DT
 					, A.UPDATE_DT
 			FROM	HETB_CK_INDUSTRY A
@@ -274,6 +278,7 @@
 	
 	<!-- 업종 관리 (등록) -->
 	<insert id="FreecheckAdminDAO.insertIndustry" parameterClass="Industry">
+	/* FreecheckAdminDAO.insertIndustry */
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_INDUSTRY
@@ -289,14 +294,14 @@
 		        	, STATUS
 		        ) 
 		    VALUES  
-		        (	(SELECT NVL(MAX(INDUSTRY_CD), 0)+1 FROM HETB_CK_INDUSTRY)
+		        (	(SELECT ISNULL(MAX(INDUSTRY_CD), 0)+1 FROM HETB_CK_INDUSTRY)
 					, '$divide_cd$'
 					, '$name$'
 					, '$use_yn$'
 					, '$insert_id$'
 					, '$insert_id$'
-					,  SYSDATE
-					,  SYSDATE
+					,  GETDATE()
+					,  GETDATE()
 					, '$year_cd$'
 		        	, 'N'
 		        ) 
@@ -304,22 +309,24 @@
 	</insert>
 
 	<update id="FreecheckAdminDAO.updateIndustry" parameterClass="Industry">
+	/* FreecheckAdminDAO.updateIndustry */
 		<![CDATA[
             UPDATE  HETB_CK_INDUSTRY 
                SET  DIVIDE_CD 			= '$divide_cd$'
 					, NAME 				= '$name$'
 					, USE_YN 			= '$use_yn$'
 					, UPDATE_ID 		= '$update_id$'
-					, UPDATE_DT 		=  SYSDATE
+					, UPDATE_DT 		=  GETDATE()
 					, YEAR_CD			= '$year_cd$'
              WHERE	INDUSTRY_CD = $industry_cd$
 		]]>
 	</update>
 
 	<update id="FreecheckAdminDAO.deleteIndustry" parameterClass="Industry">
+	/* FreecheckAdminDAO.deleteIndustry */
 		<![CDATA[
             UPDATE  HETB_CK_INDUSTRY 
-               SET  UPDATE_DT 		=  SYSDATE
+               SET  UPDATE_DT 		=  GETDATE()
 					, STATUS 		= 'Y'
              WHERE	INDUSTRY_CD = $industry_cd$
 		]]>
@@ -327,8 +334,9 @@
 	
 <!-- 업소 관련 Query -->	
 	<select id="FreecheckAdminDAO.selectCompanyListTotCnt" parameterClass="Company" resultClass="int">
+	/* FreecheckAdminDAO.selectCompanyListTotCnt */
 		<![CDATA[
-			SELECT	NVL(COUNT(*), 1) 
+			SELECT	ISNULL(COUNT(*), 1) 
 			FROM	HETB_CK_COMPANY A
 					, HETB_CK_INDUSTRY B 
 			WHERE	A.STATUS = 'N' 
@@ -432,10 +440,12 @@
 	
 	
 	<select id="FreecheckAdminDAO.selectCompanyList" parameterClass="Company" resultMap="CompanyList">
+	/* FreecheckAdminDAO.selectCompanyList */
 		<![CDATA[
-			SELECT  * 
+			SELECT  A.* 
 				FROM  (
-					SELECT 	ROWNUM AS RNUM, ALL_LIST.* 
+					SELECT 	ROW_NUMBER() OVER(ORDER BY ALL_LIST.COMPANY_CD DESC) RNUM
+					      , ALL_LIST.* 
 					FROM  (
 						SELECT 	A.COMPANY_CD
 								, A.ID
@@ -467,19 +477,18 @@
 								, A.INSERT_DT
 								, A.YEAR_CD
 								, A.GRADE_CD
-								, DECODE(A.GRADE_CD, '01', '휴업', '02', '영업', '03', '폐업') GRADE_CD_NAME
+								, CASE A.GRADE_CD WHEN '01' THEN '휴업' WHEN '02' THEN '영업' WHEN '03' THEN '폐업' END GRADE_CD_NAME
 								, B.NAME INDUSTRY_NAME
-								, NVL(C.ANSWER_CNT, 0) ANSER_CNT
+								, ISNULL(C.ANSWER_CNT, 0) ANSER_CNT
 						FROM 	HETB_CK_COMPANY A
-								, HETB_CK_INDUSTRY B
-								, ( SELECT 	COMPANY_CD, COUNT(*) AS ANSWER_CNT 
-									FROM 	HETB_CK_ANSWER 
-									WHERE 	STATUS = 'N'
-							 		GROUP BY COMPANY_CD
-								) C
+								RIGHT OUTER JOIN HETB_CK_INDUSTRY B ON A.INDUSTRY_CD = B.INDUSTRY_CD
+								RIGHT OUTER JOIN ( SELECT 	COMPANY_CD, COUNT(*) AS ANSWER_CNT 
+													FROM 	HETB_CK_ANSWER 
+													WHERE 	STATUS = 'N'
+											 		GROUP BY COMPANY_CD
+												 ) C
+									ON A.COMPANY_CD = C.COMPANY_CD
 						WHERE 	A.STATUS = 'N' 
-								AND A.INDUSTRY_CD = B.INDUSTRY_CD(+) 
-								AND A.COMPANY_CD = C.COMPANY_CD(+)
 								AND A.YEAR_CD = #year_cd#
 		]]>
 		<isEqual property="searchCondition" compareValue="1">
@@ -520,16 +529,16 @@
 		
 		
 		<![CDATA[
-						ORDER BY A.COMPANY_CD DESC
 					) ALL_LIST
-				) 
-			 WHERE  RNUM > #firstIndex#
-			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+				) A
+			 WHERE  A.RNUM > #firstIndex#
+			   AND  A.RNUM <= #firstIndex# + #recordCountPerPage#
 		]]>
 	</select>
 	
 	
 	<select id="FreecheckAdminDAO.selectCheckListByCompany" parameterClass="int" resultClass="string">
+	/* FreecheckAdminDAO.selectCheckListByCompany */
 		<![CDATA[
 			 SELECT	
 			 	B.TITLE
@@ -546,6 +555,7 @@
 	
 	
 	<select id="FreecheckAdminDAO.selectCompany" parameterClass="Company" resultMap="Company">
+	/* FreecheckAdminDAO.selectCompany */
 		<![CDATA[
 			 SELECT	A.COMPANY_CD
 					, A.ID
@@ -585,16 +595,14 @@
 					, A.GRADE_CD
 					, B.NAME INDUSTRY_NAME
 			 FROM 	HETB_CK_COMPANY A
-					, HETB_CK_INDUSTRY B
+			 		RIGHT OUTER JOIN HETB_CK_INDUSTRY B ON A.INDUSTRY_CD = B.INDUSTRY_CD
 			 WHERE 	A.COMPANY_CD = $company_cd$ 
 			 		AND A.STATUS = 'N'
-					AND A.INDUSTRY_CD = B.INDUSTRY_CD(+)
 		]]>
 	</select>
-	
-	
-	
+
 	<select id="FreecheckAdminDAO.checkCompanyId" parameterClass="Company" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.checkCompanyId */
 		<![CDATA[
 			 SELECT		COUNT(*) 
 			 FROM 		HETB_CK_COMPANY 
@@ -609,6 +617,7 @@
 	</select>
 	
 	<select id="FreecheckAdminDAO.isExistCompanyId" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.isExistCompanyId */
 		<![CDATA[
 			 SELECT		COUNT(*) 
 			 FROM 		HETB_CK_COMPANY 
@@ -618,6 +627,7 @@
 	</select>
 	
 	<select id="FreecheckAdminDAO.selectDivideCd" parameterClass="int" resultClass="java.lang.String">
+	/* FreecheckAdminDAO.selectDivideCd */
 		<![CDATA[
 			SELECT DIVIDE_CD 
 		     FROM HETB_CK_INDUSTRY
@@ -626,6 +636,7 @@
 	</select>
 	
 	<select id="FreecheckAdminDAO.selectCompanyNextKey" resultClass="java.lang.String">
+	/* FreecheckAdminDAO.selectCompanyNextKey */
 		<![CDATA[
 			SELECT		LPAD(MAX(COMPANY_CD) +1, 4, '0') as key3
 			FROM 		HETB_CK_COMPANY 
@@ -634,6 +645,7 @@
 	
 	<!-- 업소 관리 (등록) -->
 	<insert id="FreecheckAdminDAO.insertCompany" parameterClass="Company">
+	/* FreecheckAdminDAO.insertCompany */
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_COMPANY
@@ -676,7 +688,7 @@
 				, BLOG_URL
 		        ) 
 		    VALUES  
-		        ( /* (SELECT NVL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
+		        ( /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
 		        	SEQ_HETB_CK_COMPANY.NEXTVAL
 				, '$id$'
 				, '$passwd$'
@@ -706,10 +718,10 @@
 				, '$type_cd_11_yn$'
 				, '02'
 				, 'N'
-				, SYSDATE
+				, GETDATE()
 				, '$insert_ip$'
 				, '$insert_id$'
-				, SYSDATE
+				, GETDATE()
 				, '$update_ip$'
 				, '$update_id$'
 				, '$year_cd$'
@@ -718,8 +730,8 @@
 		]]>
 	</insert>
 	
-	
 	<insert id="FreecheckAdminDAO.insertMember" parameterClass="Company">
+	/* FreecheckAdminDAO.insertMember */
 		<![CDATA[
 			INSERT INTO PRTLTMEMBER 
 			(
@@ -735,9 +747,9 @@
 			(
 				'$id$', '$ceo_name$', '$passwd$', '$post$', '$addr1$',
 				'$addr2$', '$email$', '$tel$', '$hp$', null,
-				SYSDATE, null, null, null, 
+				GETDATE(), null, null, null, 
 				null, null, null, null, 
-				null, SYSDATE, SYSDATE, null, null, 
+				null, GETDATE(), GETDATE(), null, null, 
 				null, null, null, null, null, 
 				null, '2'
 			)
@@ -746,6 +758,7 @@
 	
 	
 	<update id="FreecheckAdminDAO.updateCompany" parameterClass="Company">
+	/* FreecheckAdminDAO.updateCompany */
 		<![CDATA[
             UPDATE  HETB_CK_COMPANY 
                SET	PASSWD		= '$passwd$'
@@ -775,7 +788,7 @@
 					, TYPE_CD_11_YN	= '$type_cd_11_yn$'
 					, GRADE_CD		= #grade_cd#
 					, STATUS		= 'N'
-					, UPDATE_DT		= SYSDATE
+					, UPDATE_DT		= GETDATE()
 					, UPDATE_IP		= '$update_ip$'
 					, UPDATE_ID		= '$update_id$'
 					, YEAR_CD		= '$year_cd$'
@@ -786,6 +799,7 @@
 	
 	
  	<update id="FreecheckAdminDAO.updateMember" parameterClass="Company">
+ 	/* FreecheckAdminDAO.updateMember */
  		<![CDATA[
 			UPDATE PRTLTMEMBER SET 
 				PWD = '$passwd$',
@@ -801,6 +815,7 @@
  	</update>
 	
 	<delete id="FreecheckAdminDAO.deleteCompany" parameterClass="Company">
+	/* FreecheckAdminDAO.deleteCompany */
 		<![CDATA[
             DELETE HETB_CK_COMPANY
              WHERE	COMPANY_CD = $company_cd$
@@ -808,6 +823,7 @@
 	</delete>
 	
 	<delete id="FreecheckAdminDAO.deleteCompanyForExcel" parameterClass="zvl">
+	/* FreecheckAdminDAO.deleteCompanyForExcel */
 		<![CDATA[
             DELETE FROM HETB_CK_COMPANY 
              WHERE	YEAR_CD = #yearCd#
@@ -817,6 +833,7 @@
 	
 	
 	<delete id="FreecheckAdminDAO.deleteAnswerForCompanyId" parameterClass="Company">
+	/* FreecheckAdminDAO.deleteAnswerForCompanyId */
 		<![CDATA[
 			DELETE 	FROM HETB_CK_ANSWER
 			WHERE 	COMPANY_ID = '$id$'
@@ -829,6 +846,7 @@
 	</delete>
 	
 	<delete id="FreecheckAdminDAO.deleteAnswer2ForCompanyId" parameterClass="Company">
+	/* FreecheckAdminDAO.deleteAnswer2ForCompanyId */
 		<![CDATA[
 			DELETE 	FROM HETB_CK_ANSWER2
 			WHERE 	COMPANY_ID = '$id$'
@@ -840,19 +858,18 @@
 		</isNotEqual>
 		
 	</delete>
-	
     
     <update id="FreecheckAdminDAO.deleteHandleItem" parameterClass="Company">
+    /* FreecheckAdminDAO.deleteHandleItem */
     	<![CDATA[
     		DELETE 	FROM HETB_CK_HANDLEITEM
 			WHERE 	COMPANY_ID = '$id$'
 					AND YEAR_CD = '$year_cd$'
     	]]>
     </update>
-    
-    
 	
 	<select id="FreecheckAdminDAO.selectCheckformList" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	/* FreecheckAdminDAO.selectCheckformList */
 		<![CDATA[
 			SELECT	A.MASTER_CD
 					, A.TYPE_CD
@@ -873,42 +890,39 @@
 							, A.START_DT
 							, A.END_DT
 							, A.INSERT_DT
-							, NVL(B.QUESTION_CNT, 0) QUESTION_CNT
-							, NVL(C.ANSWER_CNT, 0) ANSWER_CNT
-							, NVL(D.TYPE_CNT, 0) TYPE_TOT_CNT  
-					FROM	HETB_CK_MASTER A,  
-						    ( 
-								SELECT	MASTER_CD, COUNT(*) QUESTION_CNT 
-								FROM	HETB_CK_QUESTION WHERE STATUS = 'N'  
-								GROUP BY MASTER_CD  
-							) B,  
-							( 
-								SELECT	MASTER_CD, COUNT(*) ANSWER_CNT 
-								FROM	HETB_CK_ANSWER WHERE STATUS = 'N'  
-								GROUP BY MASTER_CD  
-							) C,  
-							( 
-								/* 해당분류별 응모대상자 총수 */
-								SELECT	A.MASTER_CD, COUNT(*) TYPE_CNT 
-								FROM	HETB_CK_MASTER A 
-								  INNER JOIN HETB_CK_LINKED_MASTER C ON A.MASTER_CD = C.MASTER_CD
-								  INNER JOIN HETB_CK_COMPANY B ON B.INDUSTRY_CD = C.INDUSTRY_CD
-								WHERE A.STATUS = 'N'  
-								  AND A.YEAR_CD = '$year_cd$'
-								GROUP BY A.MASTER_CD  
-							) D 
-					WHERE	A.STATUS = 'N' AND A.MASTER_CD = B.MASTER_CD(+) 
-							AND A.YEAR_CD = '$year_cd$' 
-							AND A.MASTER_CD = C.MASTER_CD(+)  
-							AND A.MASTER_CD = D.MASTER_CD(+)  
+							, ISNULL(B.QUESTION_CNT, 0) QUESTION_CNT
+							, ISNULL(C.ANSWER_CNT, 0) ANSWER_CNT
+							, ISNULL(D.TYPE_CNT, 0) TYPE_TOT_CNT  
+					FROM	HETB_CK_MASTER A
+							RIGHT OUTER JOIN ( 
+												SELECT	MASTER_CD, COUNT(*) QUESTION_CNT 
+												FROM	HETB_CK_QUESTION WHERE STATUS = 'N'  
+												GROUP BY MASTER_CD  
+											) B ON A.STATUS = 'N' AND A.MASTER_CD = B.MASTER_CD
+						    RIGHT OUTER JOIN ( 
+												SELECT	MASTER_CD, COUNT(*) ANSWER_CNT 
+												FROM	HETB_CK_ANSWER WHERE STATUS = 'N'  
+												GROUP BY MASTER_CD  
+											 ) C ON A.MASTER_CD = C.MASTER_CD
+						    RIGHT OUTER JOIN ( 
+												/* 해당분류별 응모대상자 총수 */
+												SELECT	A.MASTER_CD, COUNT(*) TYPE_CNT 
+												FROM	HETB_CK_MASTER A 
+												  INNER JOIN HETB_CK_LINKED_MASTER C ON A.MASTER_CD = C.MASTER_CD
+												  INNER JOIN HETB_CK_COMPANY B ON B.INDUSTRY_CD = C.INDUSTRY_CD
+												WHERE A.STATUS = 'N'  
+												  AND A.YEAR_CD = '$year_cd$'
+												GROUP BY A.MASTER_CD  
+											 ) D ON A.MASTER_CD = D.MASTER_CD
+					WHERE	A.YEAR_CD = '$year_cd$' 
 					ORDER BY A.MASTER_CD DESC   
 					) A
 			ORDER BY TYPE_CD ASC
 		]]>
 	</select>
-	
 
 	<select id="FreecheckAdminDAO.selectCheckform" parameterClass="java.lang.Integer" resultMap="Master">
+	/* FreecheckAdminDAO.selectCheckform */
 		<![CDATA[
 			SELECT	MASTER_CD
 					, TYPE_CD
@@ -933,7 +947,7 @@
 								AND STATUS = 'N'
 					) QUESTION_CNT
 					, CASE 
-						WHEN (TO_DATE(START_DT, 'YY-MM-DD') > TO_DATE(SYSDATE, 'YY-MM-DD')) THEN 'Y'
+						WHEN (CONVERT(CHAR(10), START_DT, 120) > CONVERT(CHAR(10), GETDATE(), 120)) THEN 'Y'
 						ELSE 'N'
 					END GIGAN_OPEN_YN
 			FROM	HETB_CK_MASTER
@@ -945,6 +959,7 @@
 
 	<!-- 의약업소 자율점검 (점검표관리) (등록) -->
 	<insert id="FreecheckAdminDAO.insertCheckform" parameterClass="Master">
+	/* FreecheckAdminDAO.insertCheckform */
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_MASTER
@@ -969,19 +984,18 @@
 					, #start_dt#
 					, #end_dt#
 					, '$attachfile1$'
-					,  SYSDATE
+					,  GETDATE()
 					, '$insert_id$'
-					,  SYSDATE
-					, '$update_id$'
+					,  SYSDGETDATE()			, '$update_id$'
 					, '$contents$'
 					, 'N'
 					, '$year_cd$'
 		        ) 
 		]]>
 	</insert>
-
 					
 	<update id="FreecheckAdminDAO.updateCheckform" parameterClass="Master">
+	/* FreecheckAdminDAO.updateCheckform */
 		<![CDATA[
             UPDATE  HETB_CK_MASTER 
                SET	TYPE_CD				= '$type_cd$'
@@ -997,7 +1011,7 @@
 		</isNotEmpty>
 		
 		<![CDATA[		
-			 		, UPDATE_DT			= SYSDATE
+			 		, UPDATE_DT			= GETDATE()
 					, UPDATE_IP			= '$update_ip$'
 					, UPDATE_ID			= '$update_id$'
 					, CONTENTS 			= '$contents$'
@@ -1006,99 +1020,90 @@
 		]]>
 	</update>
 	
-	
-	
 	<update id="FreecheckAdminDAO.deleteCheckformAttachFile" parameterClass="Master">
+	/* FreecheckAdminDAO.deleteCheckformAttachFile */
 		<![CDATA[
             UPDATE  HETB_CK_MASTER 
                SET	ATTACHFILE1			= ''
-			 		, UPDATE_DT			= SYSDATE
+			 		, UPDATE_DT			= GETDATE()
 					, UPDATE_ID			= '$update_id$'
              WHERE	MASTER_CD = $master_cd$
 		]]>
 	</update>
 	
-	
-	
 	<update id="FreecheckAdminDAO.deleteCheckform" parameterClass="Master">
+	/* FreecheckAdminDAO.deleteCheckform */
 		<![CDATA[
             UPDATE  HETB_CK_MASTER 
                SET	STATUS				= 'Y'
-			 		, UPDATE_DT			= SYSDATE
+			 		, UPDATE_DT			= GETDATE()
 					, UPDATE_ID			= '$update_id$'
              WHERE	MASTER_CD = $master_cd$
 		]]>
 	</update>
 	
-	
-	
-	
 	<select id="FreecheckAdminDAO.selectCheckedCompanyListTotCnt" parameterClass="Master" resultClass="int">
+	/* FreecheckAdminDAO.selectCheckedCompanyListTotCnt */
 		<![CDATA[
 			SELECT	COUNT(*)
 			FROM	(
 						SELECT	A.COMPANY_CD
 						, B.COMPANY
 						, B.INDUSTRY_CD 
-						, NVL(C.NAME, ' ') INDUSTRY_NAME
+						, ISNULL(C.NAME, ' ') INDUSTRY_NAME
 						, B.CEO_NAME
 						, B.TEL
 						, A.INSERT_DT
 						, C.DIVIDE_CD
 						FROM	HETB_CK_ANSWER A
-								, HETB_CK_COMPANY B
-								, HETB_CK_INDUSTRY C
+							  , HETB_CK_COMPANY B
+								RIGHT OUTER JOIN HETB_CK_INDUSTRY C ON B.INDUSTRY_CD = C.INDUSTRY_CD
 						WHERE	A.MASTER_CD = $master_cd$ 
 								AND A.STATUS = 'N' 
 								AND	A.COMPANY_CD = B.COMPANY_CD 
-								AND B.INDUSTRY_CD = C.INDUSTRY_CD(+) 
 						ORDER BY A.INSERT_DT DESC
 					) A 
 		]]>
 	</select>
 	
-	
 	<select id="FreecheckAdminDAO.selectCheckedCompanyList" parameterClass="Master" resultClass="java.util.HashMap">
+	/* FreecheckAdminDAO.selectCheckedCompanyList */
 		<![CDATA[
-			SELECT	* 
+			SELECT	A.* 
 			FROM	( 
-					SELECT	ROWNUM RNUM, A.* 
+					SELECT	ROW_NUMBER() OVER(ORDER BY A.INSERT_DT DESC) RNUM
+						  , A.* 
 					FROM	(
 								SELECT	A.COMPANY_CD
-               					, NVL(D.CNT, 0) AS CNT
+               					, ISNULL(D.CNT, 0) AS CNT
 								, B.COMPANY
 								, B.ID
 								, B.INDUSTRY_CD 
-								, NVL(C.NAME, ' ') INDUSTRY_NAME
+								, ISNULL(C.NAME, ' ') INDUSTRY_NAME
 								, B.CEO_NAME
 								, B.TEL
 								, A.INSERT_DT
 								, C.DIVIDE_CD
 								FROM	HETB_CK_ANSWER A
 										, HETB_CK_COMPANY B
-										, HETB_CK_INDUSTRY C
-										, (
-					                      SELECT COMPANY_CD, COUNT(*)  AS CNT
-					                      FROM HETB_CK_HANDLEITEM
-					                      GROUP BY COMPANY_CD 
-					                    ) D
+										RIGHT OUTER JOIN HETB_CK_INDUSTRY C ON B.INDUSTRY_CD = C.INDUSTRY_CD
+										RIGHT OUTER JOIN (
+										                    SELECT COMPANY_CD, COUNT(*)  AS CNT
+										                    FROM HETB_CK_HANDLEITEM
+										                    GROUP BY COMPANY_CD 
+										                  ) D ON B.COMPANY_CD = D.COMPANY_CD
 								WHERE	A.MASTER_CD = $master_cd$ 
 										AND A.STATUS = 'N' 
 										AND	A.COMPANY_CD = B.COMPANY_CD 
-										AND B.INDUSTRY_CD = C.INDUSTRY_CD(+) 
-                   						AND B.COMPANY_CD = D.COMPANY_CD(+)
-								ORDER BY A.INSERT_DT DESC
 							) A 
 					
-					)
-			WHERE	RNUM > #firstIndex#
-					AND RNUM <= #firstIndex# + #recordCountPerPage#
+					) A
+			WHERE	A.RNUM > #firstIndex# AND A.RNUM <= #firstIndex# + #recordCountPerPage#
 		]]>
 	</select>
 	
-	
-	
 	<select id="FreecheckAdminDAO.selectNotCheckedCompanyListTotCnt" parameterClass="Master" resultClass="int">
+	/* FreecheckAdminDAO.selectNotCheckedCompanyListTotCnt */
 		<![CDATA[
 			SELECT	COUNT(*) 
 			FROM	( 
@@ -1116,28 +1121,26 @@
 						WHERE	A.MASTER_CD = $master_cd$ 
 								AND B.STATUS = 'N' 
 								AND A.INDUSTRY_CD = B.INDUSTRY_CD
-					) A, (
-						SELECT	MASTER_CD
-								, COMPANY_CD 
-						FROM	HETB_CK_ANSWER
-						WHERE	MASTER_CD = $master_cd$ 
-								AND STATUS = 'N'
-					) B 
-					, HETB_CK_INDUSTRY C
-			WHERE	A.MASTER_CD = B.MASTER_CD(+) 
-					AND A.COMPANY_CD = B.COMPANY_CD(+) 
-					AND A.INDUSTRY_CD = C.INDUSTRY_CD(+) 
-					AND B.MASTER_CD IS NULL
+					) A
+				    RIGHT OUTER JOIN (
+										SELECT	MASTER_CD
+												, COMPANY_CD 
+										FROM	HETB_CK_ANSWER
+										WHERE	MASTER_CD = $master_cd$ 
+												AND STATUS = 'N'
+									) B  ON A.MASTER_CD = B.MASTER_CD
+									    AND A.COMPANY_CD = B.COMPANY_CD
+									    AND B.MASTER_CD IS NULL
+				    RIGHT OUTER JOIN HETB_CK_INDUSTRY C ON A.INDUSTRY_CD = C.INDUSTRY_CD
 		]]>
 	</select>
 	
-	
-	
 	<select id="FreecheckAdminDAO.selectNotCheckedCompanyList" parameterClass="Master" resultClass="java.util.HashMap">
+	/* FreecheckAdminDAO.selectNotCheckedCompanyList */
 		<![CDATA[
-			SELECT	* 
+			SELECT	A.* 
 			FROM	(
-						SELECT	ROWNUM RNUM
+						SELECT	ROW_NUMBER() OVER(ORDER BY A.MASTER_CD) RNUM
 								, A.MASTER_CD
 								, A.COMPANY_CD
 								, A.ID
@@ -1147,7 +1150,7 @@
 								, A.HP
 								, A.TEL
 								, A.INDUSTRY_CD 
-								, NVL(C.NAME, ' ') INDUSTRY_NAME
+								, ISNULL(C.NAME, ' ') INDUSTRY_NAME
 						FROM	( 
 									SELECT	A.MASTER_CD
 											, B.COMPANY_CD
@@ -1163,27 +1166,24 @@
 									WHERE	A.MASTER_CD = $master_cd$ 
 											AND B.STATUS = 'N' 
 											AND A.INDUSTRY_CD = B.INDUSTRY_CD
-								) A, 
-								(
-									SELECT	MASTER_CD
-											, COMPANY_CD 
-									FROM	HETB_CK_ANSWER
-									WHERE	MASTER_CD = $master_cd$ 
-											AND STATUS = 'N'
-								) B, 
-								HETB_CK_INDUSTRY C
-						WHERE	A.MASTER_CD = B.MASTER_CD(+) 
-								AND A.COMPANY_CD = B.COMPANY_CD(+) 
-								AND A.INDUSTRY_CD = C.INDUSTRY_CD(+) 
-								AND B.MASTER_CD IS NULL
-					)
-			WHERE	RNUM > #firstIndex#
-					AND RNUM <= #firstIndex# + #recordCountPerPage#
+								) A
+								RIGHT OUTER JOIN (
+													SELECT	MASTER_CD
+													      , COMPANY_CD 
+													FROM	HETB_CK_ANSWER
+													WHERE	MASTER_CD = $master_cd$ 
+															AND STATUS = 'N'
+												 ) B  ON A.MASTER_CD = B.MASTER_CD
+												     AND A.COMPANY_CD = B.COMPANY_CD
+												     AND B.MASTER_CD IS NULL
+							    RIGHT OUTER JOIN HETB_CK_INDUSTRY C ON A.INDUSTRY_CD = C.INDUSTRY_CD
+					) A
+			WHERE	A.RNUM > #firstIndex# AND A.RNUM <= #firstIndex# + #recordCountPerPage#
 		]]>
 	</select>
 	
-	
 	<select id="FreecheckAdminDAO.selectQuestionList" parameterClass="Master" resultClass="java.util.HashMap">
+	/* FreecheckAdminDAO.selectQuestionList */
 		<![CDATA[
 			SELECT 	QUESTION_CD				AS QUESTION_CD
 					, QUESTION				AS QUESTION
@@ -1198,13 +1198,14 @@
 	</select>
 	
 	<select id="FreecheckAdminDAO.selectAnswerStatisticsList" parameterClass="Master" resultClass="java.util.HashMap">
+	/* FreecheckAdminDAO.selectAnswerStatisticsList */
 		<![CDATA[
 			SELECT	A.QUESTION2_CD						AS QUESTION2_CD
 					, A.QUESTION2						AS QUESTION2
-					, NVL(B.TC, 0) 						AS TC
-					, NVL(B.TOT, 0) 					AS TOT
-					, NVL(B.PERCENT, 0) 				AS PERCENT
-					, NVL(B.PERCENT, 0)*2 				AS BAR_WIDTH
+					, ISNULL(B.TC, 0) 						AS TC
+					, ISNULL(B.TOT, 0) 					AS TOT
+					, ISNULL(B.PERCENT, 0) 				AS PERCENT
+					, ISNULL(B.PERCENT, 0)*2 				AS BAR_WIDTH
 					, A.VALIDATION
 			FROM 	(
 						SELECT	MASTER_CD
@@ -1227,75 +1228,73 @@
 								AND QUESTION_CD = $question_cd$ 
 								AND STATUS = 'N' 
 								AND OTHER_YN = 'Y'
-					) A , (
-						SELECT	A.MASTER_CD
-								, A.QUESTION_CD
-								, A.QUESTION2_CD
-								, A.TC
-								, B.TOT
-								, ROUND(A.TC*100/B.TOT) PERCENT
-						FROM (
-							SELECT	MASTER_CD
-									, QUESTION_CD
-									, QUESTION2_CD
-									, COUNT(*) TC
-							FROM	HETB_CK_ANSWER2
-							WHERE	MASTER_CD = $master_cd$  
-									AND QUESTION_CD = $question_cd$ 
-									AND STATUS = 'N'
-							GROUP BY MASTER_CD, QUESTION_CD, QUESTION2_CD
-							) A , (
-									SELECT	MASTER_CD
-											, QUESTION_CD
-											, COUNT(*) TOT 
-									FROM	HETB_CK_ANSWER2
-									WHERE	MASTER_CD = $master_cd$  
-											AND QUESTION_CD = $question_cd$ 
-											AND STATUS = 'N'
-									GROUP BY MASTER_CD, QUESTION_CD
-							) B
-						WHERE	A.MASTER_CD = B.MASTER_CD 
-								AND A.QUESTION_CD = B.QUESTION_CD
-					) B
-			WHERE	A.MASTER_CD = B.MASTER_CD(+) 
-					AND A.QUESTION1_CD = B.QUESTION_CD(+)
-					AND A.QUESTION2_CD = B.QUESTION2_CD(+)
-			ORDER BY DECODE(QUESTION2_CD, 0, 999999999999999999, QUESTION2_CD) ASC
+					) A 
+				    RIGHT OUTER JOIN (
+										SELECT	A.MASTER_CD
+												, A.QUESTION_CD
+												, A.QUESTION2_CD
+												, A.TC
+												, B.TOT
+												, ROUND(A.TC*100/B.TOT) PERCENT
+										FROM (
+												SELECT	MASTER_CD
+														, QUESTION_CD
+														, QUESTION2_CD
+														, COUNT(*) TC
+												FROM	HETB_CK_ANSWER2
+												WHERE	MASTER_CD = $master_cd$  
+														AND QUESTION_CD = $question_cd$ 
+														AND STATUS = 'N'
+												GROUP BY MASTER_CD, QUESTION_CD, QUESTION2_CD
+											 ) A 
+										   , (
+												SELECT	MASTER_CD
+												      , QUESTION_CD
+													  , COUNT(*) TOT 
+												FROM	HETB_CK_ANSWER2
+												WHERE	MASTER_CD = $master_cd$  
+													AND QUESTION_CD = $question_cd$ 
+													AND STATUS = 'N'
+												GROUP BY MASTER_CD, QUESTION_CD
+											  ) B
+										WHERE	A.MASTER_CD = B.MASTER_CD 
+												AND A.QUESTION_CD = B.QUESTION_CD
+									 ) B  ON A.MASTER_CD    = B.MASTER_CD
+									     AND A.QUESTION1_CD = B.QUESTION_CD
+									     AND A.QUESTION2_CD = B.QUESTION2_CD
+			ORDER BY CASE QUESTION2_CD WHEN 0 THEN 999999999999999999 ELSE QUESTION2_CD END ASC
 				
 		]]>
 	</select>
 	
-	
 	<select id="FreecheckAdminDAO.downloadExcelAnswerList" parameterClass="Master" resultClass="java.util.HashMap">
+	/* FreecheckAdminDAO.downloadExcelAnswerList */
 		<![CDATA[
-			SELECT	AB.SANGHO_NAME 
+			SELECT	  ROW_NUMBER() OVER(ORDER BY AB.SANGHO_NAME) RNUM
+					, AB.SANGHO_NAME 
 					, AB.NAME1 
-					, NVL(AB.TEL,' ') TEL 
+					, ISNULL(AB.TEL,' ') TEL 
 					, QA.QUESTION 
 					, AA.QUESTION2_CD 
-					, DECODE(AA.QUESTION2_CD, 0, '기타', QB.ORDERBY) ITEM_NO /* 보기번호 */
-					, DECODE(AA.QUESTION2_CD, 0, AA.OTHER, QB.QUESTION2) ITEM_CONTENTS /* 보기 */
-					, TO_CHAR(AA.INSERT_DT, 'YYYY-MM-DD HH24:MI') ANSWER_DATE 
-					, ROWNUM RNUM
+					, CASE AA.QUESTION2_CD WHEN 0 THEN '기타' ELSE QB.ORDERBY END ITEM_NO /* 보기번호 */
+					, CASE AA.QUESTION2_CD WHEN 0 THEN AA.OTHER ELSE QB.QUESTION2 END ITEM_CONTENTS /* 보기 */
+					, CONVERT(CHAR(20), AA.INSERT_DT, 120) ANSWER_DATE 
 			FROM	HETB_CK_ANSWER2 AA 
-					,HETB_CK_QUESTION QA 
-					,HETB_CK_QUESTION2 QB 
-					,HETB_CK_ANSWER AB 
+				  , HETB_CK_QUESTION QA 
+					RIGHT OUTER JOIN HETB_CK_QUESTION2 QB ON AA.QUESTION2_CD = QB.QUESTION2_CD
+				  , HETB_CK_ANSWER AB 
 			WHERE	AA.MASTER_CD = $master_cd$  
 					AND QA.MASTER_CD = $master_cd$
 					AND AA.QUESTION_CD = $question_cd$  
 					AND QA.QUESTION_CD = $question_cd$  
-					AND AA.QUESTION2_CD = QB.QUESTION2_CD(+) 
 					AND AA.COMPANY_CD = AB.COMPANY_CD 
           			AND AB.MASTER_CD = $master_cd$ 
 		]]>
 	</select>
 	
-	
-
-	
 	<!-- 의약업소 자율점검 (점검표관리) (질문 HETB_CK_QUESTION) : 조회 (단일 레코드)  -->
 	<select id="FreecheckAdminDAO.selectQuestion" parameterClass="Question" resultClass="java.util.HashMap">
+	/* FreecheckAdminDAO.selectQuestion */
 		<![CDATA[
 			SELECT	QUESTION_CD
 					, MASTER_CD
@@ -1316,6 +1315,7 @@
 	
 	<!-- 의약업소 자율점검 (점검표관리) (질문 HETB_CK_QUESTION) : 입력  -->
 	<insert id="FreecheckAdminDAO.insertQuestion" parameterClass="Question">
+	/* FreecheckAdminDAO.insertQuestion */
 		<![CDATA[
 			INSERT INTO	
 				HETB_CK_QUESTION	
@@ -1337,18 +1337,17 @@
 					, '$quest_type_cd$'
 					, '$multi_check_yn$'
 					, '$other_yn$'
-					, (SELECT NVL(MAX(ORDERBY), 0)+1 FROM HETB_CK_QUESTION WHERE MASTER_CD = $master_cd$)
+					, (SELECT ISNULL(MAX(ORDERBY), 0)+1 FROM HETB_CK_QUESTION WHERE MASTER_CD = $master_cd$)
 					, '$insert_id$'
 					, '$update_id$'
-					, SYSDATE
-					, SYSDATE)
+					, GETDATE()
+					, GETDATE())
 		]]>
 	</insert>
 	
-	
-	
 	<!-- 의약업소 자율점검 (점검표관리) (질문 HETB_CK_QUESTION) : 수정  -->
 	<update id="FreecheckAdminDAO.updateQuestion" parameterClass="Question">
+	/* FreecheckAdminDAO.updateQuestion */
 		<![CDATA[
 			UPDATE	HETB_CK_QUESTION	
 			SET		QUESTION 			= '$question$'
@@ -1356,29 +1355,28 @@
 					, MULTI_CHECK_YN 	= '$multi_check_yn$'
 					, OTHER_YN 			= '$other_yn$'
 					, UPDATE_ID 		= '$update_id$'
-					, UPDATE_DT 		= SYSDATE
+					, UPDATE_DT 		= GETDATE()
 			WHERE	QUESTION_CD = $question_cd$
 					AND MASTER_CD = $master_cd$
 		]]>
 	</update>
 	
-	
-	
 	<!-- 의약업소 자율점검 (점검표관리) (질문 HETB_CK_QUESTION) : 삭제 -->
 	<update id="FreecheckAdminDAO.updateQuestionForDelete" parameterClass="Question">
+	/* FreecheckAdminDAO.updateQuestionForDelete */
 		<![CDATA[
 			UPDATE	HETB_CK_QUESTION 
 			SET		STATUS = 'Y'
-					, UPDATE_DT = SYSDATE
+					, UPDATE_DT = GETDATE()
 					, UPDATE_ID = '$update_id$'
 			WHERE	QUESTION_CD = $question_cd$
 					AND MASTER_CD = $master_cd$ 
 		]]>
 	</update>
 	
-	
 	<!-- 의약업소 자율점검 (점검표관리) (질문 항목 HETB_CK_QUESTION2) : 조회 (복수 레코드)  -->
 	<select id="FreecheckAdminDAO.selectQuestion2ForUpdate" parameterClass="Question2" resultClass="Question2">
+	/* FreecheckAdminDAO.selectQuestion2ForUpdate */
 		<![CDATA[	
 			/* 의약업소 자율점검 (점검표관리) (질문 항목 HETB_CK_QUESTION2) : 조회 (복수 레코드) */
 			SELECT	QUESTION2_CD
@@ -1395,8 +1393,8 @@
 		]]>
 	</select>
 	
-	
 	<insert id="FreecheckAdminDAO.insertQuestion2" parameterClass="Question2">
+	/* FreecheckAdminDAO.insertQuestion2 */
 		<![CDATA[
 			/* 질문 항목 등록 */
 			INSERT INTO 
@@ -1417,20 +1415,20 @@
 		]]>
 	</insert>
 	
-	
 	<update id="FreecheckAdminDAO.updateQuestion2" parameterClass="Question2">
+	/* FreecheckAdminDAO.updateQuestion2 */
 		<![CDATA[
 			/* 질문 항목 수정 */
 			UPDATE	HETB_CK_QUESTION2 
 		]]>
 		<isEqual property="status" compareValue="N">
 			SET		QUESTION2 = '$question2$'
-					, UPDATE_DT = SYSDATE
+					, UPDATE_DT = GETDATE()
 					, VALIDATION = #validation#
 		</isEqual>
 		<isEqual property="status" compareValue="Y">
 			SET		STATUS = 'Y'
-					, UPDATE_DT = SYSDATE
+					, UPDATE_DT = GETDATE()
 					, VALIDATION = #validation#
 		</isEqual>
 		<![CDATA[
@@ -1441,6 +1439,7 @@
 	</update>
 	
     <select id="FreecheckAdminDAO.selectCheckedHandleitemListTotCnt" parameterClass="Company" resultClass="java.lang.Integer">
+    /* FreecheckAdminDAO.selectCheckedHandleitemListTotCnt */
     	<![CDATA[
     		SELECT 	count(HANDLE_CD)
 			FROM 	HETB_CK_HANDLEITEM
@@ -1450,6 +1449,7 @@
     </select>
     
     <select id="FreecheckAdminDAO.selectCheckedHandleitemList" parameterClass="Company" resultMap="Handleitem">
+    /* FreecheckAdminDAO.selectCheckedHandleitemList */
     	<![CDATA[
     		SELECT 	HANDLE_CD
 					, ITEM_NAME
@@ -1470,13 +1470,14 @@
     </select>
     
     <select id="FreecheckAdminDAO.selectCheckedQuestionCntList" parameterClass="Company" resultClass="zvl">
+    /* FreecheckAdminDAO.selectCheckedQuestionCntList */
     	<![CDATA[
 			SELECT
 				CC.ID
                 , CC.COMPANY
-                , NVL(BB.TOT_QUESTION_CNT,0) AS TOT_QUESTION_CNT
-                , NVL(AA.CORRECT_QUESTION_CNT,0) AS CORRECT_QUESTION_CNT
-                , NVL(DD.WRONG_QUESTION_CNT,0) AS WRONG_QUESTION_CNT
+                , ISNULL(BB.TOT_QUESTION_CNT,0) AS TOT_QUESTION_CNT
+                , ISNULL(AA.CORRECT_QUESTION_CNT,0) AS CORRECT_QUESTION_CNT
+                , ISNULL(DD.WRONG_QUESTION_CNT,0) AS WRONG_QUESTION_CNT
 			FROM HETB_CK_COMPANY CC
             LEFT OUTER JOIN
 			(
@@ -1492,7 +1493,7 @@
 			  INNER JOIN HETB_CK_QUESTION C
 			    ON C.QUESTION_CD = A.QUESTION_CD
 			    AND C.MASTER_CD = A.MASTER_CD
-			  WHERE NVL(B.VALIDATION,'N') = 'Y'
+			  WHERE ISNULL(B.VALIDATION,'N') = 'Y'
 			  GROUP BY A.COMPANY_ID
 			) AA ON AA.COMPANY_ID = CC.ID
             LEFT OUTER JOIN
@@ -1509,7 +1510,7 @@
 			  INNER JOIN HETB_CK_QUESTION C
 			    ON C.QUESTION_CD = A.QUESTION_CD
 			    AND C.MASTER_CD = A.MASTER_CD
-			  WHERE NVL(B.VALIDATION,'N') = 'N'
+			  WHERE ISNULL(B.VALIDATION,'N') = 'N'
 			  GROUP BY A.COMPANY_ID
 			) DD ON DD.COMPANY_ID = CC.ID
 			LEFT OUTER JOIN
@@ -1528,6 +1529,7 @@
     </select>
     
     <select id="FreecheckAdminDAO.selectWrongQuestionList" parameterClass="Company" resultClass="zvl">
+    /* FreecheckAdminDAO.selectWrongQuestionList */
     	<![CDATA[			
 			  SELECT A.COMPANY_ID, C.QUESTION, C.ORDERBY
 			  FROM HETB_CK_ANSWER2 A
@@ -1541,18 +1543,19 @@
 			  INNER JOIN HETB_CK_MASTER D
 			  	ON D.TYPE_CD = '01' AND D.MASTER_CD = A.MASTER_CD
 			  WHERE A.MASTER_CD = 2
-			  AND NVL(B.VALIDATION,'N') = 'N'
+			  AND ISNULL(B.VALIDATION,'N') = 'N'
     	]]>
     </select>
     	
     <select id="FreecheckAdminDAO.selectLinkedMasterList" resultClass="zvl">
+    /* FreecheckAdminDAO.selectLinkedMasterList */
     	<![CDATA[			
 			  SELECT A.MASTER_CD,
 			       A.INDUSTRY_CD,
 			       A.USE_YN,
-			       TO_CHAR(A.REG_DATE, 'YYYY-MM-DD') AS REG_DATE,
+			       CONVERT(CHAR(10), A.REG_DATE, 120) AS REG_DATE,
 			       B.NAME,
-			       '[' || SUBSTR(C.YEAR_CD,0,4) || ']' || C.TITLE AS TITLE
+			       '[' + SUBSTR(C.YEAR_CD,0,4) + ']' + C.TITLE AS TITLE
 			  FROM HETB_CK_LINKED_MASTER A
 			  INNER JOIN HETB_CK_INDUSTRY B ON A.INDUSTRY_CD = B.INDUSTRY_CD
 			  INNER JOIN HETB_CK_MASTER C ON A.MASTER_CD = C.MASTER_CD
@@ -1561,13 +1564,15 @@
     </select>
     	
     <insert id="FreecheckAdminDAO.addLinkedMaster" parameterClass="zvl">
+    /* FreecheckAdminDAO.addLinkedMaster */
     	<![CDATA[			
 			  INSERT INTO HETB_CK_LINKED_MASTER ( MASTER_CD,INDUSTRY_CD,USE_YN,REG_DATE )
-				VALUES ( #masterCd#, #industryCd#, #useYn#,  SYSDATE )
+				VALUES ( #masterCd#, #industryCd#, #useYn#,  GETDATE() )
     	]]>
     </insert>
     	
     <select id="FreecheckAdminDAO.selectIndustryAttrList" resultClass="zvl">
+    /* FreecheckAdminDAO.selectIndustryAttrList */
     	<![CDATA[			
 			  SELECT 
 			  	   A.INDUSTRY_CD,
@@ -1581,10 +1586,11 @@
     </select>
     	
     <select id="FreecheckAdminDAO.selectLinkedMasterByIndustry" parameterClass="string" resultClass="zvl">
+    /* FreecheckAdminDAO.selectLinkedMasterByIndustry */
     	<![CDATA[			
 			  SELECT 
 			  	   A.MASTER_CD
-			  	   ,'[' || SUBSTR(A.YEAR_CD,0,4) || ']' || A.TITLE AS TITLE
+			  	   ,'[' + SUBSTR(A.YEAR_CD,0,4) + ']' + A.TITLE AS TITLE
 			  FROM HETB_CK_MASTER A
 			  WHERE MASTER_CD NOT IN (
 			  	SELECT MASTER_CD
@@ -1596,6 +1602,7 @@
     </select>
     	
     <select id="FreecheckAdminDAO.selectMasterListByIndustry" parameterClass="string" resultClass="zvl">
+    /* FreecheckAdminDAO.selectMasterListByIndustry */
     	<![CDATA[			
 			  SELECT 
 			  	   A.MASTER_CD
@@ -1611,6 +1618,7 @@
     </select>
     	
     <delete id="FreecheckAdminDAO.delLinkedMaster" parameterClass="zvl">
+    /* FreecheckAdminDAO.delLinkedMaster */
     	<![CDATA[			
     		DELETE FROM HETB_CK_LINKED_MASTER
     		WHERE MASTER_CD = #masterCd# AND INDUSTRY_CD = #industryCd#
@@ -1618,10 +1626,11 @@
     </delete>
     	
     <select id="FreecheckAdminDAO.selectMasterCompanyPointList" parameterClass="zvl" resultClass="zvl">
+    /* FreecheckAdminDAO.selectMasterCompanyPointList */
     	<![CDATA[
     	SELECT 
-			A.COMPANY, NVL(B.QUESTION_CNT,0) AS QUESTION_CNT, NVL(C.CORRECT_ANSWER_CNT,0) AS CORRECT_ANSWER_CNT,
-			NVL(D.WRONG_ANSWER_CNT,0) AS WRONG_ANSWER_CNT,
+			A.COMPANY, ISNULL(B.QUESTION_CNT,0) AS QUESTION_CNT, ISNULL(C.CORRECT_ANSWER_CNT,0) AS CORRECT_ANSWER_CNT,
+			ISNULL(D.WRONG_ANSWER_CNT,0) AS WRONG_ANSWER_CNT,
 			A.MASTER_CD, A.COMPANY_CD, A.DIVIDE_CD
 		FROM (
 			SELECT A1.ID, A1.COMPANY, A1.INDUSTRY_CD, A3.MASTER_CD, A1.CEO_NAME, A1.GRADE_CD,
@@ -1676,22 +1685,23 @@
 		</isNotEmpty>
 		<isEqual property="searchType" compareValue="1">
 			<isNotEmpty prepend="AND" property="searchTxt">
-				<![CDATA[	A.COMPANY LIKE '%' || #searchTxt# || '%'	]]>
+				<![CDATA[	A.COMPANY LIKE '%' + #searchTxt# + '%'	]]>
 			</isNotEmpty>
 		</isEqual>		
 		<isEqual property="searchType" compareValue="2">
 			<isNotEmpty prepend="AND" property="searchTxt">
-				<![CDATA[	A.ID LIKE '%' || #searchTxt# || '%'	]]>
+				<![CDATA[	A.ID LIKE '%' + #searchTxt# + '%'	]]>
 			</isNotEmpty>
 		</isEqual>		
 		<isEqual property="searchType" compareValue="3">
 			<isNotEmpty prepend="AND" property="searchTxt">
-				<![CDATA[	A.CEO_NAME LIKE '%' || #searchTxt# || '%'	]]>
+				<![CDATA[	A.CEO_NAME LIKE '%' + #searchTxt# + '%'	]]>
 			</isNotEmpty>
 		</isEqual>			
     </select>
     	
     <select id="FreecheckAdminDAO.selectMasterListForItem" parameterClass="string" resultClass="zvl">
+    /* FreecheckAdminDAO.selectMasterListForItem */
     	<![CDATA[			
 			  SELECT A.MASTER_CD,
 			       A.TITLE
@@ -1702,12 +1712,13 @@
     </select>
     	
     <select id="FreecheckAdminDAO.selectItemList" parameterClass="string" resultClass="zvl">
+    /* FreecheckAdminDAO.selectItemList */
     	<![CDATA[			
 			  SELECT A.ITEM_ID,
 			       A.ITEM_NAME,
 			       A.MASTER_CD,
 			       A.EXCEPT_NUM,
-			       TO_CHAR(A.REG_DATE, 'YYYY-MM-DD') AS REG_DATE,
+			       CONVERT(CHAR(10), A.REG_DATE, 120) AS REG_DATE,
 			       A.YEAR_CD,
 			       B.TITLE
 			  FROM HETB_CK_ITEM A
@@ -1717,28 +1728,32 @@
     </select>
     	
     <insert id="FreecheckAdminDAO.addItem" parameterClass="zvl">
+    /* FreecheckAdminDAO.addItem */
 		<selectKey resultClass="java.lang.Long" keyProperty="itemId">
-			SELECT To_Number('0' || Max(ITEM_ID))+1 FROM HETB_CK_ITEM
+			SELECT CONVERT(INT, '0' + Max(ITEM_ID))+1 FROM HETB_CK_ITEM
 		</selectKey>			
     	<![CDATA[			
 			 INSERT INTO HETB_CK_ITEM ( ITEM_ID,ITEM_NAME,MASTER_CD,EXCEPT_NUM,REG_DATE,YEAR_CD )
-			 VALUES ( #itemId#,#itemName#,#masterCd#,#exceptNum#,SYSDATE,#yearCd#  )
+			 VALUES ( #itemId#,#itemName#,#masterCd#,#exceptNum#,GETDATE(),#yearCd#  )
     	]]>
     </insert>
     	
     <delete id="FreecheckAdminDAO.delItem" parameterClass="int">
+    /* FreecheckAdminDAO.delItem */
     	<![CDATA[			
 			 DELETE HETB_CK_ITEM WHERE ITEM_ID = #itemId#
     	]]>
     </delete>
     	
     <delete id="FreecheckAdminDAO.deleteCompanyForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.deleteCompanyForMigration */
     	<![CDATA[			
 			 DELETE HETB_CK_COMPANY WHERE YEAR_CD = #toYearCd#
     	]]>
     </delete>
     	
     <insert id="FreecheckAdminDAO.addCompanyForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.addCompanyForMigration */
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_COMPANY
@@ -1781,7 +1796,7 @@
 				, BLOG_URL
 		        ) 
 		    SELECT
-		         /* (SELECT NVL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
+		         /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
 		        SEQ_HETB_CK_COMPANY.NEXTVAL
 				, ID
 				, PASSWD
@@ -1811,10 +1826,10 @@
 				, TYPE_CD_11_YN
 				, GRADE_CD
 				, STATUS
-				, SYSDATE
+				, GETDATE()
 				, INSERT_IP
 				, INSERT_ID
-				, SYSDATE
+				, GETDATE()
 				, UPDATE_IP
 				, UPDATE_ID
 				, #toYearCd#
@@ -1826,6 +1841,7 @@
     </insert>
     	
 	<select id="FreecheckAdminDAO.selectAFMasterCdForMigration" resultClass="int">
+	/* FreecheckAdminDAO.selectAFMasterCdForMigration */
 		<![CDATA[
 			SELECT	MASTER_CD 
 			FROM HETB_CK_MASTER
@@ -1835,6 +1851,7 @@
 	</select>
 	
 	<select id="FreecheckAdminDAO.selectMasterCdForMigration" resultClass="int">
+	/* FreecheckAdminDAO.selectMasterCdForMigration */
 		<![CDATA[
 			SELECT	MASTER_CD 
 			FROM HETB_CK_MASTER
@@ -1844,6 +1861,7 @@
 	</select>
 	
 	<select id="FreecheckAdminDAO.selectQuestionCdForMigration" resultClass="int">
+	/* FreecheckAdminDAO.selectQuestionCdForMigration */
 		<![CDATA[
 			SELECT	QUESTION_CD 
 			FROM HETB_CK_QUESTION
@@ -1853,6 +1871,7 @@
 	</select>
 	
     <update id="FreecheckAdminDAO.deleteMasterForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.deleteMasterForMigration */
     	<![CDATA[			
 			 UPDATE HETB_CK_MASTER
 			 SET STATUS = 'Y' 
@@ -1861,6 +1880,7 @@
     </update>
     	
     <update id="FreecheckAdminDAO.deleteQuestionForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.deleteQuestionForMigration */
     	<![CDATA[			
 			 UPDATE HETB_CK_QUESTION
 			 SET STATUS = 'Y' 
@@ -1869,6 +1889,7 @@
     </update>
     	
     <update id="FreecheckAdminDAO.deleteQuestion2ForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.deleteQuestion2ForMigration */
     	<![CDATA[					
 			 UPDATE HETB_CK_QUESTION2
 			 SET STATUS = 'Y' 
@@ -1877,18 +1898,21 @@
     </update>
     	
 	<select id="FreecheckAdminDAO.selectMasterCdPKForMigration" resultClass="int">
+	/* FreecheckAdminDAO.selectMasterCdPKForMigration */
 		<![CDATA[
 			SELECT	SEQ_HETB_CK_MASTER.NEXTVAL FROM DUAL
 		]]>
 	</select>
 	
 	<select id="FreecheckAdminDAO.selectQuestionCdPKForMigration" resultClass="int">
+	/* FreecheckAdminDAO.selectQuestionCdPKForMigration */
 		<![CDATA[
 			SELECT	SEQ_HETB_CK_QUESTION.NEXTVAL FROM DUAL
 		]]>
 	</select>
 	
     <insert id="FreecheckAdminDAO.addMasterForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.addMasterForMigration */
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_MASTER
@@ -1906,16 +1930,16 @@
 					, STATUS
 					, YEAR_CD
 		        ) 
-		    SELECT	/*(SELECT NVL(MAX(MASTER_CD), 0)+1 FROM HETB_CK_MASTER) */
+		    SELECT	/*(SELECT ISNULL(MAX(MASTER_CD), 0)+1 FROM HETB_CK_MASTER) */
 		        	#toMasterCd#	
 					, TYPE_CD
 					, TITLE
 					, START_DT
 					, END_DT
 					, ATTACHFILE1
-					, SYSDATE
+					, GETDATE()
 					, INSERT_ID
-			 		, SYSDATE
+			 		, GETDATE()
 					, UPDATE_ID
 					, CONTENTS
 					, STATUS
@@ -1928,6 +1952,7 @@
     </insert>
     	
     <insert id="FreecheckAdminDAO.addQuestionForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.addQuestionForMigration */
 		<![CDATA[
 			INSERT INTO	
 				HETB_CK_QUESTION	
@@ -1943,7 +1968,7 @@
 					, INSERT_DT
 					, UPDATE_DT)
 				SELECT	
-					/* (SELECT NVL(MAX(QUESTION_CD),0)+1 FROM HETB_CK_QUESTION */
+					/* (SELECT ISNULL(MAX(QUESTION_CD),0)+1 FROM HETB_CK_QUESTION */
 					#toQuestionCd#
 					, #toMasterCd#
 					, QUESTION
@@ -1953,8 +1978,8 @@
 					, ORDERBY
 					, INSERT_ID
 					, UPDATE_ID
-					, SYSDATE
-					, SYSDATE
+					, GETDATE()
+					, GETDATE()
 		    FROM HETB_CK_QUESTION     
 		    WHERE MASTER_CD = #fromMasterCd#
 		    AND QUESTION_CD = #fromQuestionCd#
@@ -1963,6 +1988,7 @@
     </insert>
     	
     <insert id="FreecheckAdminDAO.addQuestion2ForMigration" parameterClass="zvl">
+    /* FreecheckAdminDAO.addQuestion2ForMigration */
 		<![CDATA[
 			INSERT INTO 
 				HETB_CK_QUESTION2
@@ -1973,7 +1999,7 @@
 					, ORDERBY
 					, VALIDATION) 
 				SELECT	
-					/* (SELECT NVL(MAX(QUESTION_CD),0)+1 FROM HETB_CK_QUESTION */
+					/* (SELECT ISNULL(MAX(QUESTION_CD),0)+1 FROM HETB_CK_QUESTION */
 					SEQ_HETB_CK_QUESTION2.NEXTVAL
 					, #toMasterCd#
 					, #toQuestionCd#
