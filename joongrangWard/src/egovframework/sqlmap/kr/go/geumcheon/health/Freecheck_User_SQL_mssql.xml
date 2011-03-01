@@ -198,7 +198,7 @@
 					   ELSE TYPYE_CD	
 				   END TYPE_CD
 			FROM (
-					SELECT REPLACE((TYPYE1||TYPYE2||TYPYE3||TYPYE4||TYPYE5|| TYPYE6||TYPYE7||TYPYE8||TYPYE9||TYPYE10||TYPYE11), '', ',') TYPYE_CD
+					SELECT REPLACE((TYPYE1+TYPYE2+TYPYE3+TYPYE4+TYPYE5+ TYPYE6+TYPYE7+TYPYE8+TYPYE9+TYPYE10+TYPYE11), '', ',') TYPYE_CD
 					FROM (
 							SELECT	CASE ISNULL(MAX(TYPE_CD_01_YN), 'N') WHEN 'Y' THEN '01' END TYPYE1
 								  , CASE ISNULL(MAX(TYPE_CD_02_YN), 'N') WHEN 'Y' THEN '02' END TYPYE2
@@ -414,7 +414,7 @@
 											SELECT	MASTER_CD
 												  , COMPANY_CD
 												  , QUESTION_CD
-												  , (':'||QUESTION2_CD||':') QUESTION2_CD
+												  , (':'+QUESTION2_CD+':') QUESTION2_CD
 												  , REPLACE(OTHER, 'º', '') OTHER
 												  , ROW_NUMBER() OVER (PARTITION BY MASTER_CD, COMPANY_CD, QUESTION_CD ORDER BY QUESTION_CD, QUESTION2_CD) SPAN
 											FROM HETB_CK_ANSWER2
@@ -902,7 +902,7 @@
     	
     <insert id="FreecheckUserDAO.addHandleitem" parameterClass="zvl">
 		<selectKey resultClass="java.lang.Long" keyProperty="handleCd">
-			SELECT CONVERT(INT, '0' || Max(HANDLE_CD))+1 FROM HETB_CK_HANDLEITEM
+			SELECT CONVERT(INT, '0' + Max(HANDLE_CD))+1 FROM HETB_CK_HANDLEITEM
 		</selectKey>			
     	<![CDATA[ 
     		INSERT INTO HETB_CK_HANDLEITEM ( 
