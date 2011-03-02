@@ -137,7 +137,7 @@ public class FreecheckAdminController {
 			, HttpServletRequest request
 			, HttpServletResponse response
 			, ModelMap model) {
-
+		
 		service.insertIndustry(bean, model);
 
 		service.selectIndustryList(bean, model);

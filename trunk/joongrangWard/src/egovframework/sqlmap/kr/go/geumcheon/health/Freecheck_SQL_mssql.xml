@@ -276,10 +276,14 @@
 		]]>
 	</select>
 	
+	<select id="FreecheckAdminDAO.selectIndustryCd" parameterClass="String" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.selectIndustryCd */
+		SELECT ISNULL(MAX(INDUSTRY_CD), 0)+1 FROM HETB_CK_INDUSTRY
+	</select>
+	
 	<!-- 업종 관리 (등록) -->
 	<insert id="FreecheckAdminDAO.insertIndustry" parameterClass="Industry">
 	/* FreecheckAdminDAO.insertIndustry */
-		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_INDUSTRY
 		        (	INDUSTRY_CD
@@ -294,7 +298,7 @@
 		        	, STATUS
 		        ) 
 		    VALUES  
-		        (	(SELECT ISNULL(MAX(INDUSTRY_CD), 0)+1 FROM HETB_CK_INDUSTRY)
+		        (	  $industry_cd$
 					, '$divide_cd$'
 					, '$name$'
 					, '$use_yn$'
@@ -305,7 +309,6 @@
 					, '$year_cd$'
 		        	, 'N'
 		        ) 
-		]]>
 	</insert>
 
 	<update id="FreecheckAdminDAO.updateIndustry" parameterClass="Industry">
@@ -638,9 +641,14 @@
 	<select id="FreecheckAdminDAO.selectCompanyNextKey" resultClass="java.lang.String">
 	/* FreecheckAdminDAO.selectCompanyNextKey */
 		<![CDATA[
-			SELECT		LPAD(MAX(COMPANY_CD) +1, 4, '0') as key3
+			SELECT		dbo.UFN_LPAD(MAX(COMPANY_CD) +1, 4, '0') as key3
 			FROM 		HETB_CK_COMPANY 
 		]]>
+	</select>
+	
+	<select id="FreecheckAdminDAO.selectCompanyCd" parameterClass="String" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.selectCompanyCd */
+		SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY
 	</select>
 	
 	<!-- 업소 관리 (등록) -->
@@ -689,7 +697,7 @@
 		        ) 
 		    VALUES  
 		        ( /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
-		        	SEQ_HETB_CK_COMPANY.NEXTVAL
+		          $company_cd$
 				, '$id$'
 				, '$passwd$'
 				, '$company$'
@@ -956,6 +964,10 @@
 		]]>
 	</select>
 	
+	<select id="FreecheckAdminDAO.selectMasterCd" parameterClass="String" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.selectMasterCd */
+		SELECT ISNULL(MAX(MASTER_CD), 0)+1 FROM HETB_CK_MASTER
+	</select>
 
 	<!-- 의약업소 자율점검 (점검표관리) (등록) -->
 	<insert id="FreecheckAdminDAO.insertCheckform" parameterClass="Master">
@@ -978,7 +990,7 @@
 					, YEAR_CD
 		        ) 
 		    VALUES  
-		        (	SEQ_HETB_CK_MASTER.NEXTVAL
+		        (	  $master_cd$
 					, '$type_cd$'
 					, '$title$'
 					, #start_dt#
@@ -986,7 +998,8 @@
 					, '$attachfile1$'
 					,  GETDATE()
 					, '$insert_id$'
-					,  SYSDGETDATE()			, '$update_id$'
+					,  GETDATE()			
+					, '$update_id$'
 					, '$contents$'
 					, 'N'
 					, '$year_cd$'
@@ -1311,7 +1324,15 @@
 		]]>
 	</select>
 	
+	<select id="FreecheckAdminDAO.selectQuestionCd" parameterClass="String" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.selectQuestionCd */
+		SELECT ISNULL(MAX(QUESTION_CD), 0)+1 FROM HETB_CK_QUESTION
+	</select>
 	
+	<select id="FreecheckAdminDAO.selectOrderby" parameterClass="Question" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.selectOrderby */
+		SELECT ISNULL(MAX(ORDERBY), 0)+1 FROM HETB_CK_QUESTION WHERE MASTER_CD = $master_cd$
+	</select>
 	
 	<!-- 의약업소 자율점검 (점검표관리) (질문 HETB_CK_QUESTION) : 입력  -->
 	<insert id="FreecheckAdminDAO.insertQuestion" parameterClass="Question">
@@ -1331,13 +1352,13 @@
 					, INSERT_DT
 					, UPDATE_DT)
 				VALUES	
-					(SEQ_HETB_CK_QUESTION.NEXTVAL
+					( $question_cd$
 					, $master_cd$
 					, '$question$'
 					, '$quest_type_cd$'
 					, '$multi_check_yn$'
 					, '$other_yn$'
-					, (SELECT ISNULL(MAX(ORDERBY), 0)+1 FROM HETB_CK_QUESTION WHERE MASTER_CD = $master_cd$)
+					, $orderby$
 					, '$insert_id$'
 					, '$update_id$'
 					, GETDATE()
@@ -1393,6 +1414,11 @@
 		]]>
 	</select>
 	
+	<select id="FreecheckAdminDAO.selectQuestion2Cd" parameterClass="String" resultClass="java.lang.Integer">
+	/* FreecheckAdminDAO.selectQuestion2Cd */
+		SELECT ISNULL(MAX(QUESTION2_CD), 0)+1 FROM HETB_CK_QUESTION2
+	</select>
+	
 	<insert id="FreecheckAdminDAO.insertQuestion2" parameterClass="Question2">
 	/* FreecheckAdminDAO.insertQuestion2 */
 		<![CDATA[
@@ -1406,7 +1432,7 @@
 					, ORDERBY
 					, VALIDATION) 
 				VALUES
-					(SEQ_HETB_CK_QUESTION2.NEXTVAL
+					(  $question2_cd$
 					,  $master_cd$
 					,  $question1_cd$
 					, '$question2$'
@@ -1797,7 +1823,7 @@
 		        ) 
 		    SELECT
 		         /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
-		        SEQ_HETB_CK_COMPANY.NEXTVAL
+		          $company_cd$
 				, ID
 				, PASSWD
 				, COMPANY
@@ -1896,20 +1922,6 @@
 			 WHERE MASTER_CD = #toMasterCd#
     	]]>
     </update>
-    	
-	<select id="FreecheckAdminDAO.selectMasterCdPKForMigration" resultClass="int">
-	/* FreecheckAdminDAO.selectMasterCdPKForMigration */
-		<![CDATA[
-			SELECT	SEQ_HETB_CK_MASTER.NEXTVAL FROM DUAL
-		]]>
-	</select>
-	
-	<select id="FreecheckAdminDAO.selectQuestionCdPKForMigration" resultClass="int">
-	/* FreecheckAdminDAO.selectQuestionCdPKForMigration */
-		<![CDATA[
-			SELECT	SEQ_HETB_CK_QUESTION.NEXTVAL FROM DUAL
-		]]>
-	</select>
 	
     <insert id="FreecheckAdminDAO.addMasterForMigration" parameterClass="zvl">
     /* FreecheckAdminDAO.addMasterForMigration */
@@ -1931,7 +1943,7 @@
 					, YEAR_CD
 		        ) 
 		    SELECT	/*(SELECT ISNULL(MAX(MASTER_CD), 0)+1 FROM HETB_CK_MASTER) */
-		        	#toMasterCd#	
+		        	  #toMasterCd#	
 					, TYPE_CD
 					, TITLE
 					, START_DT
@@ -2000,7 +2012,7 @@
 					, VALIDATION) 
 				SELECT	
 					/* (SELECT ISNULL(MAX(QUESTION_CD),0)+1 FROM HETB_CK_QUESTION */
-					SEQ_HETB_CK_QUESTION2.NEXTVAL
+					  $question2_cd$
 					, #toMasterCd#
 					, #toQuestionCd#
 					, QUESTION2
