@@ -90,7 +90,7 @@ public class MenuLoadServlet extends HttpServlet
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.168:1521:orcl", "health", "health");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl", "health", "health");
 			*/
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.0.11:1521:orcl", "health", "health");
+			conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=master", "health", "health");
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query.toString());
 			List<ZValue> healthList = new ArrayList<ZValue>();

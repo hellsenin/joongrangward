@@ -184,6 +184,8 @@ public class FreecheckAdminService {
 //		LoginVO user = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 //		bean.setUpdate_id(user.getId());
 //		bean.setInsert_id(user.getId());
+		
+		bean.setIndustry_cd(dao.getIndustryCd());
 		dao.insertIndustry(bean);
 	}
 
