@@ -878,7 +878,6 @@
 	
 	<select id="FreecheckAdminDAO.selectCheckformList" parameterClass="java.lang.String" resultClass="java.util.HashMap">
 	/* FreecheckAdminDAO.selectCheckformList */
-		<![CDATA[
 			SELECT	A.MASTER_CD
 					, A.TYPE_CD
 					, A.TITLE
@@ -923,10 +922,9 @@
 												GROUP BY A.MASTER_CD  
 											 ) D ON A.MASTER_CD = D.MASTER_CD
 					WHERE	A.YEAR_CD = '$year_cd$' 
-					ORDER BY A.MASTER_CD DESC   
+					<!-- ORDER BY A.MASTER_CD DESC -->   
 					) A
 			ORDER BY TYPE_CD ASC
-		]]>
 	</select>
 
 	<select id="FreecheckAdminDAO.selectCheckform" parameterClass="java.lang.Integer" resultMap="Master">
@@ -1581,7 +1579,7 @@
 			       A.USE_YN,
 			       CONVERT(CHAR(10), A.REG_DATE, 120) AS REG_DATE,
 			       B.NAME,
-			       '[' + SUBSTR(C.YEAR_CD,0,4) + ']' + C.TITLE AS TITLE
+			       '[' + SUBSTRING(C.YEAR_CD,0,4) + ']' + C.TITLE AS TITLE
 			  FROM HETB_CK_LINKED_MASTER A
 			  INNER JOIN HETB_CK_INDUSTRY B ON A.INDUSTRY_CD = B.INDUSTRY_CD
 			  INNER JOIN HETB_CK_MASTER C ON A.MASTER_CD = C.MASTER_CD
@@ -1616,7 +1614,7 @@
     	<![CDATA[			
 			  SELECT 
 			  	   A.MASTER_CD
-			  	   ,'[' + SUBSTR(A.YEAR_CD,0,4) + ']' + A.TITLE AS TITLE
+			  	   ,'[' + SUBSTRING(A.YEAR_CD,0,4) + ']' + A.TITLE AS TITLE
 			  FROM HETB_CK_MASTER A
 			  WHERE MASTER_CD NOT IN (
 			  	SELECT MASTER_CD
@@ -1732,7 +1730,7 @@
 			  SELECT A.MASTER_CD,
 			       A.TITLE
 			  FROM HETB_CK_MASTER A
-			  WHERE SUBSTR(YEAR_CD,1,4) = #yearCd#
+			  WHERE SUBSTRING(YEAR_CD,1,4) = #yearCd#
 			  AND TYPE_CD = '02'
     	]]>
     </select>
@@ -1780,7 +1778,6 @@
     	
     <insert id="FreecheckAdminDAO.addCompanyForMigration" parameterClass="zvl">
     /* FreecheckAdminDAO.addCompanyForMigration */
-		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_COMPANY
 		        (	COMPANY_CD
@@ -1822,8 +1819,8 @@
 				, BLOG_URL
 		        ) 
 		    SELECT
-		         /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
-		          $company_cd$
+		        <!--  /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */ -->
+		          $companyCd$
 				, ID
 				, PASSWD
 				, COMPANY
@@ -1863,7 +1860,6 @@
 		    FROM HETB_CK_COMPANY
 		    WHERE YEAR_CD = #fromYearCd#
 		    AND  STATUS = 'N'
-		]]>
     </insert>
     	
 	<select id="FreecheckAdminDAO.selectAFMasterCdForMigration" resultClass="int">
@@ -2012,7 +2008,7 @@
 					, VALIDATION) 
 				SELECT	
 					/* (SELECT ISNULL(MAX(QUESTION_CD),0)+1 FROM HETB_CK_QUESTION */
-					  $question2_cd$
+					  $question2Cd$
 					, #toMasterCd#
 					, #toQuestionCd#
 					, QUESTION2
