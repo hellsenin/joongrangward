@@ -185,7 +185,6 @@ public class FreecheckAdminService {
 //		bean.setUpdate_id(user.getId());
 //		bean.setInsert_id(user.getId());
 		
-		bean.setIndustry_cd(dao.getIndustryCd());
 		dao.insertIndustry(bean);
 	}
 
@@ -1295,9 +1294,7 @@ public class FreecheckAdminService {
 		List<Integer> cdList = dao.selectMasterCdForMigration(zvl);
 		for(int i : cdList)
 		{
-			int masterCd = dao.selectMasterCdPKForMigration();
 			zvl.put("fromMasterCd", i);
-			zvl.put("toMasterCd", masterCd);
 			dao.addMasterForMigration(zvl);
 			List<Integer> qList = dao.selectQuestionCdForMigration(zvl);
 			for(int j : qList)
