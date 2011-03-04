@@ -276,18 +276,12 @@
 		]]>
 	</select>
 	
-	<select id="FreecheckAdminDAO.selectIndustryCd" parameterClass="String" resultClass="java.lang.Integer">
-	/* FreecheckAdminDAO.selectIndustryCd */
-		SELECT ISNULL(MAX(INDUSTRY_CD), 0)+1 FROM HETB_CK_INDUSTRY
-	</select>
-	
 	<!-- 업종 관리 (등록) -->
 	<insert id="FreecheckAdminDAO.insertIndustry" parameterClass="Industry">
 	/* FreecheckAdminDAO.insertIndustry */
 		    INSERT 
 		      INTO  HETB_CK_INDUSTRY
-		        (	INDUSTRY_CD
-		        	, DIVIDE_CD
+		        (	 DIVIDE_CD
 		        	, NAME
 		        	, USE_YN
 		        	, INSERT_ID
@@ -298,8 +292,7 @@
 		        	, STATUS
 		        ) 
 		    VALUES  
-		        (	  $industry_cd$
-					, '$divide_cd$'
+		        (	  '$divide_cd$'
 					, '$name$'
 					, '$use_yn$'
 					, '$insert_id$'
@@ -646,19 +639,13 @@
 		]]>
 	</select>
 	
-	<select id="FreecheckAdminDAO.selectCompanyCd" parameterClass="String" resultClass="java.lang.Integer">
-	/* FreecheckAdminDAO.selectCompanyCd */
-		SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY
-	</select>
-	
 	<!-- 업소 관리 (등록) -->
 	<insert id="FreecheckAdminDAO.insertCompany" parameterClass="Company">
 	/* FreecheckAdminDAO.insertCompany */
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_COMPANY
-		        (	COMPANY_CD
-				, ID
+		        (	ID
 				, PASSWD
 				, COMPANY
 				, SA_NO
@@ -697,8 +684,7 @@
 		        ) 
 		    VALUES  
 		        ( /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */
-		          $company_cd$
-				, '$id$'
+		          '$id$'
 				, '$passwd$'
 				, '$company$'
 				, '$sa_no$'
@@ -961,11 +947,6 @@
 					AND STATUS = 'N' 
 		]]>
 	</select>
-	
-	<select id="FreecheckAdminDAO.selectMasterCd" parameterClass="String" resultClass="java.lang.Integer">
-	/* FreecheckAdminDAO.selectMasterCd */
-		SELECT ISNULL(MAX(MASTER_CD), 0)+1 FROM HETB_CK_MASTER
-	</select>
 
 	<!-- 의약업소 자율점검 (점검표관리) (등록) -->
 	<insert id="FreecheckAdminDAO.insertCheckform" parameterClass="Master">
@@ -973,8 +954,7 @@
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_MASTER
-		        (	MASTER_CD		
-					, TYPE_CD
+		        (	TYPE_CD
 					, TITLE
 					, START_DT
 					, END_DT
@@ -988,8 +968,7 @@
 					, YEAR_CD
 		        ) 
 		    VALUES  
-		        (	  $master_cd$
-					, '$type_cd$'
+		        (	  '$type_cd$'
 					, '$title$'
 					, #start_dt#
 					, #end_dt#
@@ -1322,11 +1301,6 @@
 		]]>
 	</select>
 	
-	<select id="FreecheckAdminDAO.selectQuestionCd" parameterClass="String" resultClass="java.lang.Integer">
-	/* FreecheckAdminDAO.selectQuestionCd */
-		SELECT ISNULL(MAX(QUESTION_CD), 0)+1 FROM HETB_CK_QUESTION
-	</select>
-	
 	<select id="FreecheckAdminDAO.selectOrderby" parameterClass="Question" resultClass="java.lang.Integer">
 	/* FreecheckAdminDAO.selectOrderby */
 		SELECT ISNULL(MAX(ORDERBY), 0)+1 FROM HETB_CK_QUESTION WHERE MASTER_CD = $master_cd$
@@ -1338,8 +1312,7 @@
 		<![CDATA[
 			INSERT INTO	
 				HETB_CK_QUESTION	
-					(QUESTION_CD
-					, MASTER_CD
+					(MASTER_CD
 					, QUESTION
 					, QUEST_TYPE_CD
 					, MULTI_CHECK_YN
@@ -1350,8 +1323,7 @@
 					, INSERT_DT
 					, UPDATE_DT)
 				VALUES	
-					( $question_cd$
-					, $master_cd$
+					( $master_cd$
 					, '$question$'
 					, '$quest_type_cd$'
 					, '$multi_check_yn$'
@@ -1412,26 +1384,19 @@
 		]]>
 	</select>
 	
-	<select id="FreecheckAdminDAO.selectQuestion2Cd" parameterClass="String" resultClass="java.lang.Integer">
-	/* FreecheckAdminDAO.selectQuestion2Cd */
-		SELECT ISNULL(MAX(QUESTION2_CD), 0)+1 FROM HETB_CK_QUESTION2
-	</select>
-	
 	<insert id="FreecheckAdminDAO.insertQuestion2" parameterClass="Question2">
 	/* FreecheckAdminDAO.insertQuestion2 */
 		<![CDATA[
 			/* 질문 항목 등록 */
 			INSERT INTO 
 				HETB_CK_QUESTION2
-					(QUESTION2_CD
-					, MASTER_CD
+					(MASTER_CD
 					, QUESTION1_CD
 					, QUESTION2
 					, ORDERBY
 					, VALIDATION) 
 				VALUES
-					(  $question2_cd$
-					,  $master_cd$
+					(  $master_cd$
 					,  $question1_cd$
 					, '$question2$'
 					,  $orderby$
@@ -1753,13 +1718,8 @@
     	
     <insert id="FreecheckAdminDAO.addItem" parameterClass="zvl">
     /* FreecheckAdminDAO.addItem */
-		<selectKey resultClass="java.lang.Long" keyProperty="itemId">
-			SELECT CONVERT(INT, '0' + Max(ITEM_ID))+1 FROM HETB_CK_ITEM
-		</selectKey>			
-    	<![CDATA[			
-			 INSERT INTO HETB_CK_ITEM ( ITEM_ID,ITEM_NAME,MASTER_CD,EXCEPT_NUM,REG_DATE,YEAR_CD )
-			 VALUES ( #itemId#,#itemName#,#masterCd#,#exceptNum#,GETDATE(),#yearCd#  )
-    	]]>
+			 INSERT INTO HETB_CK_ITEM ( ITEM_NAME,MASTER_CD,EXCEPT_NUM,REG_DATE,YEAR_CD )
+			 VALUES ( #itemName#,#masterCd#,#exceptNum#,GETDATE(),#yearCd#  )
     </insert>
     	
     <delete id="FreecheckAdminDAO.delItem" parameterClass="int">
@@ -1780,8 +1740,7 @@
     /* FreecheckAdminDAO.addCompanyForMigration */
 		    INSERT 
 		      INTO  HETB_CK_COMPANY
-		        (	COMPANY_CD
-				, ID
+		        (	ID
 				, PASSWD
 				, COMPANY
 				, SA_NO
@@ -1820,8 +1779,7 @@
 		        ) 
 		    SELECT
 		        <!--  /* (SELECT ISNULL(MAX(COMPANY_CD),0)+1 FROM HETB_CK_COMPANY) */ -->
-		          $companyCd$
-				, ID
+		          ID
 				, PASSWD
 				, COMPANY
 				, SA_NO
@@ -1924,8 +1882,7 @@
 		<![CDATA[
 		    INSERT 
 		      INTO  HETB_CK_MASTER
-		        (	MASTER_CD		
-					, TYPE_CD
+		        (	TYPE_CD
 					, TITLE
 					, START_DT
 					, END_DT
@@ -1939,8 +1896,7 @@
 					, YEAR_CD
 		        ) 
 		    SELECT	/*(SELECT ISNULL(MAX(MASTER_CD), 0)+1 FROM HETB_CK_MASTER) */
-		        	  #toMasterCd#	
-					, TYPE_CD
+		        	  TYPE_CD
 					, TITLE
 					, START_DT
 					, END_DT
@@ -2000,16 +1956,14 @@
 		<![CDATA[
 			INSERT INTO 
 				HETB_CK_QUESTION2
-					(QUESTION2_CD
-					, MASTER_CD
+					(MASTER_CD
 					, QUESTION1_CD
 					, QUESTION2
 					, ORDERBY
 					, VALIDATION) 
 				SELECT	
 					/* (SELECT ISNULL(MAX(QUESTION_CD),0)+1 FROM HETB_CK_QUESTION */
-					  $question2Cd$
-					, #toMasterCd#
+					  #toMasterCd#
 					, #toQuestionCd#
 					, QUESTION2
 					, ORDERBY
