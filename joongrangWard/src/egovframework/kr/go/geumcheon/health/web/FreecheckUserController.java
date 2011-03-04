@@ -42,7 +42,7 @@ public class FreecheckUserController {
 		, HttpServletResponse response 
 		, ModelMap model) throws Exception {
 		
-		String includePage = "health/dev_content/freecheck/login";
+		String includePage = "/contents/login.jsp";
 
 		model.addAttribute("includePage", includePage);
 		
