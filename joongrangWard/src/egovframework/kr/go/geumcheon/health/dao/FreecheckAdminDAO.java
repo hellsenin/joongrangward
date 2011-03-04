@@ -94,7 +94,6 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 		bean.setPasswd(passwd);
 		int existCnt = (Integer) selectByPk("FreecheckAdminDAO.isExistCompanyId", bean.getId());
 		if(existCnt == 0) {
-			bean.setCompany_cd(getCompanyCd());
 			insert("FreecheckAdminDAO.insertCompany", bean); 
 			//insert("FreecheckAdminDAO.insertMember", bean);
 		} 
@@ -134,7 +133,6 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 	}
 
 	public void insertCheckform(Master bean) {
-		bean.setMaster_cd(getMasterCd());
 		insert("FreecheckAdminDAO.insertCheckform", bean); 
 	}
 
@@ -194,7 +192,6 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 
 	/* 의약업소 자율점검 (점검표관리) (질문 HETB_CK_QUESTION) : 입력  */
 	public void insertQuestion(Question bean) {
-		bean.setQuestion_cd(getQuestionCd());
 		bean.setOrderby(getOrderby(bean));
 		insert("FreecheckAdminDAO.insertQuestion", bean); 
 	}
@@ -216,7 +213,6 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 
 	/* 의약업소 자율점검 (점검표관리) (질문HETB_CK_QUESTION1에 대한 답변 항목 HETB_CK_QUESTION2 등록) */
 	public void insertQuestion2(Question2 bean) {
-		bean.setQuestion2_cd(getQuestion2Cd());
 		insert("FreecheckAdminDAO.insertQuestion2", bean); 
 	}
 
@@ -305,7 +301,6 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 	}
 
 	public void addCompanyForMigration(ZValue zvl) {
-		zvl.put("company_cd", getCompanyCd());
 		insert("FreecheckAdminDAO.addCompanyForMigration", zvl);
 	}
 
@@ -324,10 +319,6 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 	public List<Integer> selectQuestionCdForMigration(ZValue zvl) {
 		return (List<Integer>) list("FreecheckAdminDAO.selectQuestionCdForMigration", zvl);
 	}
-	
-	public int selectMasterCdPKForMigration() {
-		return (Integer) selectByPk("FreecheckAdminDAO.selectMasterCd", null);
-	}
 
 	public int selectQuestionCdPKForMigration() {
 		return (Integer) selectByPk("FreecheckAdminDAO.selectQuestionCd", null);
@@ -342,28 +333,7 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 	}
 
 	public void addQuestion2ForMigration(ZValue zvl) {
-		zvl.put("question2_cd", getQuestion2Cd());
 		insert("FreecheckAdminDAO.addQuestion2ForMigration", zvl);
-	}
-
-	public int getIndustryCd() {
-		return (Integer) selectByPk("FreecheckAdminDAO.selectIndustryCd", "");
-	}
-	
-	public int getCompanyCd() {
-		return (Integer) selectByPk("FreecheckAdminDAO.selectCompanyCd", "");
-	}
-	
-	public int getMasterCd() {
-		return (Integer) selectByPk("FreecheckAdminDAO.selectMasterCd", "");
-	}
-	
-	public int getQuestionCd() {
-		return (Integer) selectByPk("FreecheckAdminDAO.selectQuestionCd", "");
-	}
-	
-	public int getQuestion2Cd() {
-		return (Integer) selectByPk("FreecheckAdminDAO.selectQuestion2Cd", "");
 	}
 	
 	public int getOrderby(Question bean) {
