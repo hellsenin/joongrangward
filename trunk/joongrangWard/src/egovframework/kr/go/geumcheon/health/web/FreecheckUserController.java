@@ -34,6 +34,8 @@ public class FreecheckUserController {
 	@Resource(name = "webFactory")
 	private WebFactory WebFactory;
 
+	private String FRAME_PAGE = "inc/frame";
+	
 	@RequestMapping("/health/freecheck/loginPage.do")
 	public String loginPage(
 		 HttpServletRequest request
@@ -43,7 +45,8 @@ public class FreecheckUserController {
 		String includePage = "health/dev_content/freecheck/login";
 
 		model.addAttribute("includePage", includePage);
-		return includePage;
+		
+		return FRAME_PAGE;
 	}
 
 	@RequestMapping("/health/freecheck/login.do")
@@ -94,7 +97,7 @@ public class FreecheckUserController {
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return includePage;
+		return FRAME_PAGE;
 	}
 	
 	@RequestMapping("/health/freecheck/view.do")
@@ -122,7 +125,7 @@ public class FreecheckUserController {
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return includePage;
+		return FRAME_PAGE;
 	}
 
 	@RequestMapping("/health/freecheck/forCheck.do")
@@ -151,7 +154,7 @@ public class FreecheckUserController {
 		String includePage = "/health/dev_content/freecheck/check";
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return includePage;
+		return FRAME_PAGE;
 	}
 
 	@RequestMapping("/health/freecheck/check.do")
@@ -380,7 +383,7 @@ public class FreecheckUserController {
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return includePage;
+		return FRAME_PAGE;
 	}
 	
 
@@ -399,7 +402,7 @@ public class FreecheckUserController {
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return includePage;
+		return FRAME_PAGE;
 	}
 	
 
@@ -478,7 +481,7 @@ public class FreecheckUserController {
 		String includePage = "/health/dev_content/freecheck/drugList";
 
 		model.addAttribute("includePage", includePage);
-		return includePage;
+		return FRAME_PAGE;
 	}
 
 }
