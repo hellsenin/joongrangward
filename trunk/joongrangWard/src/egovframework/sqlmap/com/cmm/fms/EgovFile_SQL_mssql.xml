@@ -109,7 +109,7 @@
 
  	<select id="FileManageDAO.selectFileListByFileNm" parameterClass="FileVO" resultMap="fileList" >
  		<![CDATA[
- 		SELECT * FROM ( SELECT ROW_NUMBER() OVER(a.ATCH_FILE_ID, b.FILE_SN) RN, TB.* FROM (
+ 		SELECT a.* FROM ( SELECT ROW_NUMBER() OVER(ORDER BY a.ATCH_FILE_ID, b.FILE_SN) RN, TB.* FROM (
 			SELECT 
 				a.ATCH_FILE_ID, b.FILE_CN, b.FILE_SN, b.FILE_STRE_COURS, b.STRE_FILE_NM,
 				b.FILE_EXTSN, b.ORIGNL_FILE_NM, b.FILE_MG, a.CREAT_DT
@@ -127,7 +127,7 @@
 				<![CDATA[	b.ORIGNL_FILE_NM LIKE '%' + #searchWrd# + '%' 		]]>
 			</isEqual>	
 		<![CDATA[			
-			) TB ) WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+			) TB ) a WHERE a.rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
 		]]>		 		
  	</select>
 
