@@ -15,8 +15,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import egovframework.com.cmm.service.Globals;
 import egovframework.kr.go.geumcheon.health.service.FileDownloadService;
+import egovframework.kr.go.geumcheon.health.service.FreecheckAdminService;
 import egovframework.kr.go.geumcheon.health.service.FreecheckUserService;
 import egovframework.kr.go.geumcheon.health.service.WebFactory;
 import egovframework.kr.go.geumcheon.health.util.ZValue;
@@ -41,9 +41,10 @@ public class FreecheckUserController {
 		 HttpServletRequest request
 		, HttpServletResponse response 
 		, ModelMap model) throws Exception {
-		
+				
 		String includePage = "/contents/login.jsp";
 
+		model.addAttribute("industryList", service.selectIndustryList());
 		model.addAttribute("includePage", includePage);
 		
 		return FRAME_PAGE;
@@ -93,7 +94,7 @@ public class FreecheckUserController {
 		// 점검표 리스트 불러오기
 		service.selectCheckStateList(company, model);
 		
-		String includePage = "/health/dev_content/freecheck/list";
+		String includePage = "/contents/list.jsp";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
@@ -121,7 +122,7 @@ public class FreecheckUserController {
 		service.selectCheckStateView(bean, model);
 		
 		
-		String includePage = "/health/dev_content/freecheck/view";
+		String includePage = "/contents/view.jsp";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
@@ -151,7 +152,7 @@ public class FreecheckUserController {
 		// 업소 정보 불러오기 
 		service.selectCompanyInfo(bean, model);
 		
-		String includePage = "/health/dev_content/freecheck/check";
+		String includePage = "/contents/check.jsp";
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
 		return FRAME_PAGE;
@@ -206,7 +207,7 @@ public class FreecheckUserController {
 			{
 				List<ZValue> handleItemList = service.selectHandleitemListU(company);
 				model.addAttribute("handleItemList", handleItemList);
-				includePage = "/health/dev_content/freecheck/drugList";
+				includePage = "/contents/drugList.jsp";
 			}
 			else
 			{
@@ -227,7 +228,7 @@ public class FreecheckUserController {
 				
 				model.addAttribute("Bean", param);
 				
-				includePage = "/health/dev_content/freecheck/list";	
+				includePage = "/contents/list.jsp";	
 				model.addAttribute("view_state", "checked");
 			}
 		} 
@@ -379,7 +380,7 @@ public class FreecheckUserController {
 		service.selectFreecheckInfoList(bean, model);
 		model.addAttribute("Bean", bean);
 		
-		String includePage = "/health/dev_content/freecheck/list_info";
+		String includePage = "/contents/list_info.jsp";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
@@ -398,7 +399,7 @@ public class FreecheckUserController {
 		service.selectFreecheckInfo(bean, model);
 		model.addAttribute("Bean", bean);
 		
-		String includePage = "/health/dev_content/freecheck/read_info";
+		String includePage = "/contents/read_info.jsp";
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
@@ -478,7 +479,7 @@ public class FreecheckUserController {
 		, HttpServletResponse response 
 		, ModelMap model) throws Exception {
 		
-		String includePage = "/health/dev_content/freecheck/drugList";
+		String includePage = "/contents/drugList.jsp";
 
 		model.addAttribute("includePage", includePage);
 		return FRAME_PAGE;
