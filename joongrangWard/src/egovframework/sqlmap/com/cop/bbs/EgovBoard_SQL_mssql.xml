@@ -230,8 +230,17 @@
 
 			
 	<select id="BBSManageDAO.selectBoardArticleList" parameterClass="BoardVO" resultMap="boardList" >
-		<![CDATA[
-		SELECT * FROM ( SELECT ROW_NUMBER() OVER(TB.NTT_ID) RN
+		SELECT a.* FROM ( SELECT ROW_NUMBER() OVER(ORDER BY 
+			<isEqual property="type" compareValue="1">
+				<![CDATA[	TB.OPTION2 desc, TB.OPTION3 ASC		]]>
+			</isEqual>
+			<isEqual property="type" compareValue="2">
+				<![CDATA[	TB.PARNTS DESC, NTT_NO ASC		]]>
+			</isEqual>
+			<isEqual property="type" compareValue="9">
+				<![CDATA[	TB.FRST_REGISTER_PNTTM DESC		]]>
+			</isEqual>
+		) RN
 							 , TB.* FROM (
 			SELECT
 				a.NTT_ID, a.NTT_SJ, a.NTT_CN, a.FRST_REGISTER_ID, a.NTCR_NM as FRST_REGISTER_NM,
@@ -271,7 +280,6 @@
 			WHERE
 				a.BBS_ID = #bbsId#
 				AND a.DELCODE = '0'
-		]]>
 			<isNotEmpty prepend="AND" property="optionWrd">
 				<![CDATA[	$optionCnd$ = #optionWrd# 		]]>
 			</isNotEmpty>
@@ -293,18 +301,8 @@
 			<isEqual prepend="AND" property="health" compareValue="Y">
 				<![CDATA[	a.option1 in ('건강증진과', '보건위생과', '의약과')		]]>
 			</isEqual>			
-			<isEqual prepend="ORDER BY" property="type" compareValue="1">
-				<![CDATA[	a.OPTION2 desc, a.OPTION3 ASC		]]>
-			</isEqual>
-			<isEqual prepend="ORDER BY" property="type" compareValue="2">
-				<![CDATA[	a.PARNTS DESC, NTT_NO ASC		]]>
-			</isEqual>
-			<isEqual prepend="ORDER BY" property="type" compareValue="9">
-				<![CDATA[	a.FRST_REGISTER_PNTTM DESC		]]>
-			</isEqual>						
 		<![CDATA[
-						
-			) TB ) WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+			) TB ) a WHERE a.rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
 		]]>				
 	</select>	
 	
@@ -343,7 +341,7 @@
 
 	<select id="BBSManageDAO.selectMainBoardArticleList3" parameterClass="BoardVO" resultClass="BoardVO" >
 		<![CDATA[
-		SELECT * FROM ( SELECT ROW_NUMBER() OVER(TB.NTT_ID) RN , TB.* FROM (
+		SELECT a.* FROM ( SELECT ROW_NUMBER() OVER(ORDER BY TB.FRST_REGISTER_PNTTM DESC) RN , TB.* FROM (
 			SELECT * FROM (
 			SELECT
 				a.NTT_ID as nttId, a.NTT_SJ as nttSj, a.FRST_REGISTER_ID as frstRegisterId, a.NTCR_NM as frstRegisterNm,
@@ -368,9 +366,9 @@
 			WHERE
 				a.BBS_ID = 'BBSMSTR_000000001149'
 				AND a.DELCODE = '0'
-			) ORDER BY FRST_REGISTER_PNTTM DESC
+			) 
 				
-			) TB ) WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+			) TB ) a WHERE a.rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
 		]]>				
 	</select>	
 	
@@ -556,7 +554,7 @@
 
 	<select id="BBSManageDAO.selectGuestList" parameterClass="BoardVO" resultMap="guestList" >
 		<![CDATA[
-		SELECT * FROM ( SELECT ROW_NUMBER() OVER(TB.NTT_ID) RN, TB.* FROM (
+		SELECT a.* FROM ( SELECT ROW_NUMBER() OVER(ORDER BY TB.SORT_ORDR DESC, tb.NTT_NO ASC) RN, TB.* FROM (
 			SELECT
 				a.NTT_ID, a.NTT_SJ, a.NTCR_NM, a.PASSWORD, 
 				CONVERT(CHAR(20), a.FRST_REGISTER_PNTTM, 120)
@@ -568,8 +566,7 @@
 				a.BBS_ID = #bbsId#
 			AND
 				a.USE_AT = 'Y'
-			ORDER BY a.SORT_ORDR DESC, a.NTT_NO ASC
-			) TB ) WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+			) TB ) a WHERE a.rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
 		]]>				
 	</select>	
 	
@@ -804,7 +801,7 @@
 	
 	<select id="BBSManageDAO.selectMyBoardArticleList" parameterClass="BoardVO" resultMap="boardList" >
 		<![CDATA[
-		SELECT * FROM ( SELECT ROW_NUMBER() OVER(TB.NTT_ID) RN, TB.* FROM (
+		SELECT a.* FROM ( SELECT ROW_NUMBER() OVER(ORDER BY TB.NTT_ID) RN, TB.* FROM (
 			SELECT
 				a.NTT_ID, a.NTT_SJ, a.NTT_CN, a.FRST_REGISTER_ID, ISNULL('admin', a.NTCR_NM) as FRST_REGISTER_NM,
 				CONVERT(CHAR(10), a.FRST_REGISTER_PNTTM, 120) as FRST_REGISTER_PNTTM,
@@ -843,7 +840,7 @@
 				<![CDATA[	$searchCnd$ LIKE '%' + #searchWrd# + '%' 		]]>
 			</isNotEmpty>
 		<![CDATA[			
-			) TB ) WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+			) TB ) a WHERE a.rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
 		]]>				
 	</select>	
 	
