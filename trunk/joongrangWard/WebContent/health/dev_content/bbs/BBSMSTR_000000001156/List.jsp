@@ -33,13 +33,14 @@
 
 </script>
 
-<div class="body">
+		<div id="contents">
+			<div id="location">HOME > 자율점검서식</div>
+			<h3><img src="/images/h3_02.gif" alt="자율점검서식" /></h3>
+				<div class="top_txt"><img src="/images/top_txt.gif" alt="의료기관 등 자율점검을 인터넷 방식으로 변경하였습니다. 의료기관 및 약국 등 각 업소 개설자(대표자)의 적극적인 협조를 부탁드리며, 발송된 공문과 서식 등을 참고하여 자율점검표를 성실히 기한 내에 입력하여 주시기 바랍니다." /></div>
+				
 
-<form name="frm" action="/health/bbs/selectBoardList.do?bbsId=${param.bbsId}&amp;categoryId=${param.categoryId}" method="post" onsubmit="return fn_bbs_search_check();">
-<div class="board_top clearfix">
-    <div class="fl_l"> <span>${resultCnt}건 [${searchVO.pageIndex} / ${totalPage} Page]</span> </div>
-    <fieldset class="fl_r">
-        <legend>게시물검색</legend>
+		<!-- 게시물검색 -->
+			<div class="mb15 mt15 cb fr">
 		<label for="searchCnd" class="blind">구분선택</label>
         <select name="searchCnd" id="searchCnd">
             <option value="" <c:if test="${searchVO.searchCnd == ''}">selected="selected"</c:if> >선택</option>
@@ -48,43 +49,52 @@
         </select>
 		<label for="searchWrd" class="blind">검색어</label>
         <input type="text" id="searchWrd" class="text" name="searchWrd" value='<c:out value="${searchVO.searchWrd}"/>' />
-    <input type="image" src="/health/open_content/images/borad/btn_search.gif" alt="검색" />
-    </fieldset>
-</div>
-</form>
-
-<table class="default_list" summary="번호, 제목, 점검기간, 문제수, 첨부파일로 구성">
-    <caption>자율점검서식</caption>
-    <thead>
-        <tr>
-            <th width="7%" scope="col">번호</th>
-            <th width="37%" scope="col">제목</th>
-            <th width="30%" scope="col">점검기간</th>
-            <th width="16%" scope="col">문제수</th>
-            <th width="10%" scope="col">첨부파일</th>
-        </tr>
-    </thead>
-    <tbody>
+			  <input class="vm" name="" type="image" src="/images/btn_search.gif" alt="검색" />
+			</div>
+        <!-- //게시물검색 -->
+	
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_list">
+          <caption>자율점검서식 게시판입니다.</caption>
+          <colgroup>
+				  <col style="width:7%;" />
+				  <col style="width:*;" />
+				  <col style="width:18%;" />
+				  <col style="width:25%;" />
+				  <col style="width:12%;" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>점검기간</th>
+              <th>문제수</th>
+              <th>첨부파일</th>
+            </tr>
+          </thead>
+          <tbody>
     	<c:forEach var="result" items="${resultList}" varStatus="status">
-        <tr>
-            <td><c:out value="${(resultCnt) - (searchVO.pageSize * (searchVO.pageIndex-1))}"/></td>
-            <td class="tal"><c:out value="${result.nttSj}" /></td>
-            <td><c:out value="${result.option1}" /> ~ <c:out value="${result.option2}" /></td>
-			<td><c:out value="${result.option3}"/></td>
-            <td>
+            <tr>
+              <td><c:out value="${(resultCnt) - (searchVO.pageSize * (searchVO.pageIndex-1))}"/></td>
+              <td class="aleft"><a href="/health/bbs/selectBoardArticle.do?categoryId=${param.categoryId}&amp;bbsId=${param.bbsId}&amp;nttId=${result.nttId}"><c:out value="${result.nttSj}" /></a></td>
+              <td>${result.option1}~${result.option2}</td>
+              <td>${result.option3}</td>
+              <td><img src="/images/file_down.gif" alt="첨부파일 다운로드" />
             	<c:if test="${result.fileNm != null}">
-					<a href="/cmm/fms/FileDown.do?atchFileId=<c:out value='${result.atchFileId}'/>&fileSn=<c:out value='${result.fileSeq}'/>"><img src="http://www.geumcheon.go.kr/open_content/images/common/icon/icon_form.gif" alt="첨부파일" /></a>
+					<a href="/cmm/fms/FileDown.do?atchFileId=<c:out value='${result.atchFileId}'/>&fileSn=<c:out value='${result.fileSeq}'/>"><img src="/images/file_down.gif" alt="첨부파일" /></a>
 				</c:if>
-            </td>
-        </tr>
+              </td>
+            </tr>
         <c:set var="resultCnt" value="${resultCnt-1}" />
         </c:forEach>
-    </tbody>
-</table>
+          </tbody>
+        </table>
 
-<ol class="paging">
-    <!-- 이미지들어간곳은 붙여서 코딩하기 바람 -->
-    ${pageNav}
-</ol>
+        <!-- 목록 페이징 -->
+        <div class="paging">
+    		${pageNav}
+        </div>
+        <!-- //목록 페이징 -->
 
-</div>
+
+
+		</div>
