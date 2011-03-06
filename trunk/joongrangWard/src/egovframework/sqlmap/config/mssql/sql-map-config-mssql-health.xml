@@ -11,6 +11,7 @@
 	<!-- 게시판 -->
 	<sqlMap resource="egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL_mssql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/com/cop/bbs/EgovBoard_SQL_mssql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/cmm/fms/EgovFile_SQL_mssql.xml.xml"/>
 	
 	<!-- 우편번호 -->
 	<sqlMap resource="egovframework/sqlmap/kr/go/geumcheon/health/zipcode_SQL_oracle.xml"/>
