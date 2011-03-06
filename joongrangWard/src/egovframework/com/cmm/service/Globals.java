@@ -61,7 +61,7 @@ public class Globals {
 	//포탈
 	public static final String PORTAL_MAIN_PAGE = "portal/open_content/main/portalIndex";
 	//보건소
-	public static final String HEALTH_MAIN_PAGE = "health/open_content/main/healthIndex";
+	public static final String HEALTH_MAIN_PAGE = "inc/frame";
 	//어린이
 	public static final String CHILD_MAIN_PAGE = "children/open_content/main/childIndex";
 	//구의회
