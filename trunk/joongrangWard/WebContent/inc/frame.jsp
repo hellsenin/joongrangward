@@ -1,5 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:choose>
+	<c:when test="${empty param.bbsId}">
+		<c:set var="topMenuImg01" value="/images/top_menu_on_01.gif" />
+		<c:set var="topMenuImg02" value="/images/top_menu_off_02.gif" />
+		<c:set var="topMenuImg03" value="/images/top_menu_off_03.gif" />
+	</c:when>
+	<c:when test="${param.bbsId == 'BBSMSTR_000000001155'}">
+		<c:set var="topMenuImg01" value="/images/top_menu_off_01.gif" />
+		<c:set var="topMenuImg02" value="/images/top_menu_on_02.gif" />
+		<c:set var="topMenuImg03" value="/images/top_menu_off_03.gif" />
+	</c:when>
+	<c:when test="${param.bbsId == 'BBSMSTR_000000001156'}">
+		<c:set var="topMenuImg01" value="/images/top_menu_off_01.gif" />
+		<c:set var="topMenuImg02" value="/images/top_menu_off_02.gif" />
+		<c:set var="topMenuImg03" value="/images/top_menu_on_03.gif" />
+	</c:when>
+</c:choose>
+	
 <!DOCTYPE html PUBLIC "-//W3C//DTD html 4.0 Transitional//EN">
 <html>
  <head>
@@ -21,9 +44,9 @@
 			<h1><a href="#"><img src="/images/top_logo.gif" width="293" height="35" alt="서울 중랑구 의약업소 자율점검 시스템" /></a></h1>
 			<div id="gnb">
 					<div class="top_menu">
-							<h2><a href="/health/freecheck/list.do" ><img src="/images/top_menu_on_01.gif" alt="인터넷자율점검" /></a></h2>
-							<h2><a href="#" ><img src="/images/top_menu_off_02.gif" alt="자율점검서식" /></a></h2>
-							<h2><a href="#" ><img src="/images/top_menu_off_03.gif" alt="자율점검작성방법" /></a></h2>
+							<h2><a href="/health/freecheck/list.do" ><img src="${topMenuImg01}" alt="인터넷자율점검" /></a></h2>
+							<h2><a href="/health/bbs/selectBoardList.do?bbsId=BBSMSTR_000000001155" ><img src="${topMenuImg02}" alt="자율점검서식" /></a></h2>
+							<h2><a href="/health/bbs/selectBoardList.do?bbsId=BBSMSTR_000000001156" ><img src="${topMenuImg03}" alt="자율점검작성방법" /></a></h2>
 					</div>
 			</div>
 
