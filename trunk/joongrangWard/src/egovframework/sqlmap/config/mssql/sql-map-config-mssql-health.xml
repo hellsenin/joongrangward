@@ -8,6 +8,10 @@
 	<sqlMap resource="egovframework/sqlmap/kr/go/geumcheon/health/Freecheck_SQL_mssql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/kr/go/geumcheon/health/Freecheck_User_SQL_mssql.xml"/>
 	
+	<!-- 게시판 -->
+	<sqlMap resource="egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL_mssql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/cop/bbs/EgovBoard_SQL_mssql.xml"/>
+	
 	<!-- 우편번호 -->
 	<sqlMap resource="egovframework/sqlmap/kr/go/geumcheon/health/zipcode_SQL_oracle.xml"/>
 </sqlMapConfig>
