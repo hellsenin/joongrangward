@@ -34,6 +34,10 @@ public class FreecheckUserService {
 
 	@Resource(name="pageUtil")
 	private PageUtil PageUtil;
+
+	public List<ZValue> selectIndustryList() {
+		return dao.selectIndustryList();
+	}
 	
 	
 	public boolean loginFreecheck(Company bean, ModelMap model) throws Exception {

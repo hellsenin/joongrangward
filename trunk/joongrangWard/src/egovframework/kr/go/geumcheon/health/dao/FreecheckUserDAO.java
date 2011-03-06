@@ -18,6 +18,10 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class FreecheckUserDAO extends EgovAbstractDAO {
 	
 
+	public List<ZValue> selectIndustryList() {
+		return (List<ZValue>) list("FreecheckUserDAO.selectIndustryList", null);
+	}
+
 	/**
 	 * 자율점검 사용자 로그인
 	 * @param bean
