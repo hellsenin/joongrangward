@@ -15,7 +15,7 @@
 	<c:forEach var="x" begin="0" end="${fn:length(path)-1}">
 		<c:set var="title" value="${path[x]}&lt;${title}"/>
 	</c:forEach>
-	<title>금천시 보건소</title>
+	<title>중랑구 보건소</title>
 <link href="/health/open_content/system/css/default.css" rel="stylesheet" type="text/css" />
 <link href="/health/open_content/system/css/common.css" rel="stylesheet" type="text/css" />
 <link href="/health/open_content/system/css/blue.css" rel="stylesheet" type="text/css" />

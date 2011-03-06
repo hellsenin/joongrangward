@@ -21,6 +21,7 @@
 <link href="/health/open_content/system/css/blue.css" rel="stylesheet" type="text/css" />
 <link href="/health/open_content/system/css/board_blue.css" rel="stylesheet" type="text/css" />
 
+<script type="text/javascript" src="/health/open_content/system/js/Calendar.js"></script>
 <script type="text/javascript"> 
 	
 	function fn_egov_regist_notice() {
@@ -28,12 +29,7 @@
 		if (document.board.nttSj.value==""){
 				alert("\제목을 입력하세요.");
 				return false;
-		} 
-		if (document.board.nttCn.value==""){
-				alert("\내용을 입력하세요.");
-				return false;
-		} 
-		
+		} 		
 		if (confirm('등록하시겠습니까?')) {
 			return true;
 		}
@@ -75,8 +71,8 @@
     <tr>
         <th scope="row" class="title"><label for="option1">점검기간</label> </th>
         <td colspan="3" class="title_data">
-			<input type="text" id="option1" name="option1" /> ~
-			<input type="text" id="option2" name="option2" />
+			<input type="text" id="option1" name="option1" /><a href="javascript:Calendar_D(board.option1)"><img src="/health/open_content/images/calendar.gif" class="vat" alt=""/></a> ~
+			<input type="text" id="option2" name="option2" /><a href="javascript:Calendar_D(board.option2)"><img src="/health/open_content/images/calendar.gif" class="vat" alt=""/></a>
 		</td>
     </tr>
     <tr>
