@@ -33,12 +33,15 @@
 
 </script>
 
-<div class="body">
+<div id="contents">
 
 <form name="frm" action="/health/bbs/selectBoardList.do?bbsId=${param.bbsId}&amp;categoryId=${param.categoryId}" method="post" onsubmit="return fn_bbs_search_check();">
-<div class="board_top clearfix">
-    <div class="fl_l"> <span>${resultCnt}건 [${searchVO.pageIndex} / ${totalPage} Page]</span> </div>
-    <fieldset class="fl_r">
+<!-- 
+    <div class="fl_l"> 
+    	<span>${resultCnt}건 [${searchVO.pageIndex} / ${totalPage} Page]</span> 
+    </div>
+-->
+    <div class="mb15 mt15 cb fr">
         <legend>게시물검색</legend>
 		<label for="searchCnd" class="blind">구분선택</label>
         <select name="searchCnd" id="searchCnd">
@@ -49,35 +52,41 @@
 		<label for="searchWrd" class="blind">검색어</label>
         <input type="text" id="searchWrd" class="text" name="searchWrd" value='<c:out value="${searchVO.searchWrd}"/>' />
     <input type="image" src="/health/open_content/images/borad/btn_search.gif" alt="검색" />
-    </fieldset>
-</div>
+    </div>
 </form>
 
-<table class="default_list" summary="번호, 제목, 담당부서, 등록일, 첨부파일, 조회수로 구성">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_list" summary="번호, 제목, 담당부서, 등록일, 첨부파일, 조회수로 구성">
     <caption>의약공람</caption>
+    <colgroup>
+		<col style="width:7%;" />
+		<col style="width:*;" />
+		<col style="width:15%;" />
+		<col style="width:12%;" />
+		<col style="width:10%;" />
+    </colgroup>
     <thead>
         <tr>
-            <th width="7%" scope="col">번호</th>
-            <th width="40%" scope="col">제목</th>
-            <th width="17%" scope="col">담당부서</th>
-            <th width="16%" scope="col">등록일</th>
-            <th width="10%" scope="col">첨부파일</th>
-            <th width="10%" scope="col">조회수</th>
+            <th>번호</th>
+            <th>제목</th>
+            <th>담당부서</th>
+            <th>등록일</th>
+            <th>첨부파일</th>
+            <th>조회수</th>
         </tr>
     </thead>
     <tbody>
     	<c:forEach var="result" items="${resultList}" varStatus="status">
         <tr>
-            <td><c:out value="${(resultCnt) - (searchVO.pageSize * (searchVO.pageIndex-1))}"/></td>
-            <td class="tal"><a href="/health/bbs/selectBoardArticle.do?categoryId=${param.categoryId}&amp;bbsId=${param.bbsId}&amp;nttId=${result.nttId}"><c:out value="${result.nttSj}" /></a></td>
-            <td><c:out value="${result.option1}" /></td>
-			<td><c:out value="${result.frstRegisterPnttm}"/></td>
-            <td>
+            <td class="aleft"><c:out value="${(resultCnt) - (searchVO.pageSize * (searchVO.pageIndex-1))}"/></td>
+            <td class="aleft"><a href="/health/bbs/selectBoardArticle.do?categoryId=${param.categoryId}&amp;bbsId=${param.bbsId}&amp;nttId=${result.nttId}"><c:out value="${result.nttSj}" /></a></td>
+            <td class="aleft"><c:out value="${result.option1}" /></td>
+			<td class="aleft"><c:out value="${result.frstRegisterPnttm}"/></td>
+            <td class="aleft">
             	<c:if test="${result.fileNm != null}">
 					<a href="/cmm/fms/FileDown.do?atchFileId=<c:out value='${result.atchFileId}'/>&fileSn=<c:out value='${result.fileSeq}'/>"><img src="http://www.geumcheon.go.kr/open_content/images/common/icon/icon_form.gif" alt="첨부파일" /></a>
 				</c:if>
             </td>
-            <td><c:out value="${result.inqireCo}"/></td>
+            <td class="aleft"><c:out value="${result.inqireCo}"/></td>
         </tr>
         <c:set var="resultCnt" value="${resultCnt-1}" />
         </c:forEach>
