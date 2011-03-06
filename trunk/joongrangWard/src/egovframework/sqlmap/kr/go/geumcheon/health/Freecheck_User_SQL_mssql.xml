@@ -87,6 +87,21 @@
 	</resultMap>
 	
 	
+	<!-- 업종 관리 (조회) -->
+	<select id="FreecheckUserDAO.selectIndustryList" resultClass="zvl">
+	/* FreecheckAdminDAO.selectIndustryList */
+		<![CDATA[
+			SELECT	A.INDUSTRY_CD
+								, A.DIVIDE_CD
+								, A.NAME
+								, A.USE_YN
+								, A.YEAR_CD
+						FROM	HETB_CK_INDUSTRY A
+				 		WHERE 	A.STATUS = 'N' 
+				 		AND USE_YN = 'Y'
+		]]>
+	</select>
+	
     <!-- 자율점검 사용자 로그인 -->
     <select id="FreecheckUserDAO.loginFreecheck" parameterClass="Company" resultMap="Company">
     /* FreecheckUserDAO.loginFreecheck */
@@ -134,10 +149,10 @@
 			FROM HETB_CK_COMPANY  A 
 			     RIGHT OUTER JOIN HETB_CK_INDUSTRY B ON A.INDUSTRY_CD = B.INDUSTRY_CD
 			WHERE A.STATUS = 'N'
-			  AND A.ID     = '$id$' 
-		<isEqual property="forLogin" compareValue="Y">
-					  AND PASSWD   = #passwd#
-		</isEqual>	    		
+			  AND A.COMPANY     = #company#
+			  AND A.INDUSTRY_CD = #industry_cd#
+			  AND CEO_NAME = #ceo_name#
+			  AND SA_NO = #sa_no#
 		        ) A
 		WHERE A.RNUM = 1
     </select>
