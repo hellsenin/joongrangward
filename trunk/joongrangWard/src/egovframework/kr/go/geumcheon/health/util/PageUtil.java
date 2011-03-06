@@ -59,37 +59,37 @@ public class PageUtil
 
 		if (prev10 > 0) 
 		{
-			sbuf.append("<li class=\"nopd\"><a href=\"" + link + "&amp;pageIndex=1\"><img src=\"/health/open_content/images/borad/paging_fir.gif\" width=\"19\" height=\"15\" alt=\"처음페이지\" /></a></li>");
-			sbuf.append("<li  class=\"nopd\"><a href=\"" + link + "&amp;pageIndex=" +prev10 + "\">");
-			sbuf.append("<img src=\"/health/open_content/images/borad/paging_pre.gif\" width=\"19\" height=\"15\" alt=\"이전페이지\" /></a></li>");
+			sbuf.append("<a href=\"" + link + "&amp;pageIndex=1\"><img src=\"/images/btn_first.gif\" width=\"19\" height=\"15\" alt=\"처음페이지\" /></a>");
+			sbuf.append("<a href=\"" + link + "&amp;pageIndex=" +prev10 + "\">");
+			sbuf.append("<img src=\"/images/btn_prev.gif\" width=\"19\" height=\"15\" alt=\"이전페이지\" /></a>");
 		} // end if 이전10개
 		else
 		{
-			sbuf.append("<li class=\"nopd\"><img src=\"/health/open_content/images/borad/paging_fir.gif\" width=\"19\" height=\"15\" alt=\"처음페이지\" /></li>");
-			sbuf.append("<li class=\"nopd\"><img src=\"/health/open_content/images/borad/paging_pre.gif\" width=\"19\" height=\"15\" alt=\"이전페이지\" /></li>" );
+			sbuf.append("<img src=\"/images/btn_first.gif\" width=\"19\" height=\"15\" alt=\"처음페이지\" />");
+			sbuf.append("<img src=\"/images/btn_prev.gif\" width=\"19\" height=\"15\" alt=\"이전페이지\" />" );
 		}
 
 		for (int i = 1 + prev10; i < next10 && i <= totalPage; i++) 
 		{
 			if (i == cpage) 
 			{
-				sbuf.append("<li><span title=\"현재 페이지\">"+i+"</span></li>");
+				sbuf.append("<span title=\"현재 페이지\">"+i+"</span>");
 			} 
 			else 
 			{
-				sbuf.append("<li><a href=\"" +link + "&amp;pageIndex="+i + "\">"+i+"</a></li>");
+				sbuf.append("<a href=\"" +link + "&amp;pageIndex="+i + "\">"+i+"</a>");
 			} // end if 현재페이지 링크제거
 		} // end for
 
 		if (totalPage >= next10) 
 		{
-			sbuf.append("<li class=\"nopd\"><a href=\"" + link + "&amp;pageIndex=" +next10 + "\" class=\"next\"><img src=\"/health/open_content/images/borad/paging_next.gif\" width=\"19\" height=\"15\" alt=\"다음페이지\" /></a></li>");
-			sbuf.append("<li class=\"nopd\"><a href=\"" + link + "&amp;pageIndex=" +totalPage + "\" class=\"last\"><img src=\"/health/open_content/images/borad/paging_end.gif\" width=\"19\" height=\"15\" alt=\"마지막페이지\" /></a></li>");
+			sbuf.append("<a href=\"" + link + "&amp;pageIndex=" +next10 + "\" class=\"next\"><img src=\"/images/btn_next.gif\" width=\"19\" height=\"15\" alt=\"다음페이지\" /></a>");
+			sbuf.append("<a href=\"" + link + "&amp;pageIndex=" +totalPage + "\" class=\"last\"><img src=\"/images/btn_last.gif\" width=\"19\" height=\"15\" alt=\"마지막페이지\" /></a>");
 		} // end if 다음10개
 		else
 		{
-			sbuf.append("<li class=\"nopd\"><img src=\"/health/open_content/images/borad/paging_next.gif\" width=\"19\" height=\"15\" alt=\"다음페이지\" /></li>");
-			sbuf.append("<li class=\"nopd\"><img src=\"/health/open_content/images/borad/paging_end.gif\" width=\"19\" height=\"15\" alt=\"마지막페이지\" /></li>");
+			sbuf.append("<img src=\"/images/btn_next.gif\" width=\"19\" height=\"15\" alt=\"다음페이지\" />");
+			sbuf.append("<img src=\"/images/btn_last.gif\" width=\"19\" height=\"15\" alt=\"마지막페이지\" />");
 		}
 
 		return sbuf.toString();
