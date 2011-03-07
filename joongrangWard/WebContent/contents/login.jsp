@@ -10,11 +10,16 @@
 	function checkForm(form)
 	{
 		var v = new MiyaValidator(form);
-	    v.add("id", {
+	    v.add("industryCd", {
 	    	required: true
 	    });
-
-	    v.add("passwd", {
+	    v.add("company", {
+	        required: true
+	    });
+	    v.add("ceoName", {
+	        required: true
+	    });
+	    v.add("saNo", {
 	        required: true
 	    });
 
@@ -32,6 +37,7 @@
 	}	
 
 </script> 
+        <form id="frm" name="frm" method="post" onsubmit="return checkForm(this);" action="/health/freecheck/login.do?categoryId=${param.categoryId}" >
 		<div id="contents">
 			<div id="location">HOME > 인터넷 자율점검</div>
 			<h3><img src="/images/h3_01.gif" alt="인터넷 자율점검" /></h3>
@@ -42,26 +48,29 @@
 			
 			<h4 class="mt15">자율점검 시스템 로그인</h4>
 				<div class="login_box mt15">
-				<div class="btn_login"><img src="/images/btn_login.gif" alt="로그인" /></div>
+				<div class="btn_login"><input type="image" src="/images/btn_login.gif" alt="로그인" /></div>
 					<dl>
-						<dt>업종명</dt>
+						<dt><label for="industryCd">업종명</label></dt>
 						<dd>
-							<select name="">
+							<c:forEach var="industry" items="${industryList}">
+							<select id="industryCd" name="industry_cd">
 								<option>업종선택</option>
+								<option value="${industry.industryCd}">${industry.name}</option>
 							</select>
+							</c:forEach>
 						</dd>
 					</dl>
 					<dl>
 						<dt>업소명</dt>
-						<dd><input name="" type="text" class="txt" /></dd>
+						<dd><input id="company" name="company" type="text" class="txt" /></dd>
 					</dl>
 					<dl>
 						<dt>대표자성명</dt>
-						<dd><input name="" type="text" class="txt" /></dd>
+						<dd><input id="ceoName" name="ceo_name" type="text" class="txt" /></dd>
 					</dl>
 					<dl>
 						<dt>사업자등록번호</dt>
-						<dd><input name="" type="text" class="txt" /></dd>
+						<dd><input id="saNo" name="sa_no" type="text" class="txt" /></dd>
 					</dl>
 					
 					<div class="bt_txt cb">
@@ -82,3 +91,4 @@
 					</li>
 				</ul>
 		</div>
+        </form>
