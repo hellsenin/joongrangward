@@ -1,12 +1,12 @@
 package egovframework.kr.go.geumcheon.health.dao;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import egovframework.com.utl.DateUtil;
-import egovframework.com.utl.fcc.service.EgovDateUtil;
 import egovframework.com.utl.fcc.service.EgovStringUtil;
 import egovframework.kr.go.geumcheon.health.util.ZValue;
 import egovframework.kr.go.geumcheon.health.vo.Company;
@@ -177,7 +177,7 @@ public class FreecheckAdminDAO extends EgovAbstractDAO {
 	}
 
 	public List<HashMap> selectAnswerStatisticsList(Master bean) {
-		return (List<HashMap>) list("FreecheckAdminDAO.selectAnswerStatisticsList", bean); 
+		return (List<HashMap>) list("FreecheckAdminDAO.selectAnswerStatisticsList", bean);
 	}
 
 	public List<HashMap> downloadExcelAnswerList(Master bean) {
