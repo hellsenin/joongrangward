@@ -160,10 +160,10 @@ function del()
 							${status.count}. ${answerItem.QUESTION2}
 						</td>
 						<td>${answerItem.VALIDATION}</td>
-						<td class="tar">${answerItem.TC}/${answerItem.TOT} (${answerItem.PERCENT}%)</td>
+						<td class="tar">${answerItem.TC}/${answerItem.TOT} (${answerItem.PERCENT2}%)</td>
 						<td>
 							<div class="grp">
-							 <img src="/health/open_content/images/grp1.gif" style="width:${answerItem.PERCENT+1}%; height:8px" alt="" />
+							 <img src="/health/open_content/images/grp1.gif" style="width:${answerItem.PERCENT2+1}%; height:8px" alt="" />
 							</div>
 						</td>
 					</tr>
