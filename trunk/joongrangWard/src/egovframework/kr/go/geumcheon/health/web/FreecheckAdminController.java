@@ -1794,4 +1794,19 @@ public class FreecheckAdminController {
     	WebFactory.printHtml(response, "성공적으로 등록되었습니다.", "/admin/freecheck/checkform/list.do?yearCd="+zvl.getString("yearCd"));
 	}
 
+	@RequestMapping("/admin/freecheck/addCompanyForMigrationFromExcel.do")
+	public void addCompanyForMigrationFromExcel(
+			HttpServletRequest request,
+			HttpServletResponse response,	
+			ModelMap model) throws Exception
+	{
+    	ZValue zvl = WebFactory.getAttributes(request);   
+    	if(zvl.getInt("type") == 1)
+    		service.addCompanyForMigrationFromExcel1(zvl);
+    	else
+    		service.addCompanyForMigrationFromExcel2(zvl);
+
+    	//WebFactory.printHtml(response, "성공적으로 등록되었습니다.", "/admin/freecheck/company/list.do?yearCd="+zvl.getString("yearCd"));
+	}
+
 }
