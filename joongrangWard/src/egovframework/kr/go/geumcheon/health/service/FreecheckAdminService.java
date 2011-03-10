@@ -18,6 +18,7 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -1280,6 +1281,146 @@ public class FreecheckAdminService {
 	public void addCompanyForMigration(ZValue zvl) throws Exception {
 		dao.deleteCompanyForMigration(zvl);
 		dao.addCompanyForMigration(zvl);
+	}
+
+	public void addCompanyForMigrationFromExcel1(ZValue zvl) throws Exception {
+
+		boolean result = true;
+
+	    try
+	    {
+			File f = new File("c:/1.xls");
+			Workbook workbook = Workbook.getWorkbook(f); 
+			Sheet sheet = workbook.getSheet(0); 
+			Cell col01Cell;    //순번 a
+			Cell col02Cell;     //구허가번호
+			Cell col03Cell;      //영업구분
+			Cell col04Cell;     //양국명칭
+			Cell col05Cell;     //개설자명
+			Cell col06Cell;     //전번
+			Cell col07Cell;     //우편
+			Cell col08Cell;     //소재지
+			Cell col09Cell;     //면적
+			Cell col10Cell;     //약국구분
+			Cell col11Cell;     //등록일자
+			Cell col12Cell;     //면허종별
+			Cell col13Cell;     //면허번호
+			Cell col14Cell;     //핸폰
+	
+			ArrayList<Company> dataList = new ArrayList<Company>();
+			int colLen = sheet.getColumn(0).length;
+			
+			for(int j = 1 ; j <= colLen - 1 ; j++)
+			{
+				col01Cell = sheet.getCell(0,j);
+				col02Cell = sheet.getCell(1,j);    
+				col03Cell = sheet.getCell(2,j);      
+				col04Cell = sheet.getCell(3,j);      
+				col05Cell = sheet.getCell(4,j);      
+				col06Cell = sheet.getCell(5,j);      
+				col07Cell = sheet.getCell(6,j);      
+				col08Cell = sheet.getCell(7,j);      
+				col09Cell = sheet.getCell(8,j);      
+				col10Cell = sheet.getCell(9,j);       
+				col11Cell = sheet.getCell(10,j);       
+				col12Cell = sheet.getCell(11,j);       
+				col13Cell = sheet.getCell(12,j);       
+				col14Cell = sheet.getCell(13,j);  
+								
+				Company bean = new Company();
+				bean.setPost(bean.getZipcode1() + "-" + bean.getZipcode2());
+				bean.setStatus("N");
+				PropertyUtils.setProperty(bean, "sa_no", col02Cell.getContents());
+				PropertyUtils.setProperty(bean, "company", col04Cell.getContents());
+				PropertyUtils.setProperty(bean, "ceo_name", col05Cell.getContents());
+				PropertyUtils.setProperty(bean, "tel", col06Cell.getContents());
+				PropertyUtils.setProperty(bean, "post", col07Cell.getContents());
+				PropertyUtils.setProperty(bean, "addr1", col08Cell.getContents());
+				PropertyUtils.setProperty(bean, "hp", col14Cell.getContents());
+
+				PropertyUtils.setProperty(bean, "industry_cd", new Integer(3));
+				PropertyUtils.setProperty(bean, "year_cd", "2011");
+
+				dao.insertCompany(bean);
+			}
+		
+	    }
+	    catch(Exception e)
+	    {
+	    	e.printStackTrace();
+	    	result = false;
+	    }
+	    
+	}
+
+	public void addCompanyForMigrationFromExcel2(ZValue zvl) throws Exception {
+
+		boolean result = true;
+
+	    try
+	    {
+			File f = new File("c:/2.xls");
+			Workbook workbook = Workbook.getWorkbook(f); 
+			Sheet sheet = workbook.getSheet(0); 
+			Cell col01Cell;    //순번 a
+			Cell col02Cell;     //구허가번호
+			Cell col03Cell;      //신고일자
+			Cell col04Cell;     //영업구분
+			Cell col05Cell;     //신고구굽
+			Cell col06Cell;     //영업소명
+			Cell col07Cell;     //소재지
+			Cell col08Cell;     //우편
+			Cell col09Cell;     //전화
+			Cell col10Cell;     //개인법인
+			Cell col11Cell;     //개설자명
+			Cell col12Cell;     //법인번호
+			Cell col13Cell;     //전번
+			Cell col14Cell;     //핸폰
+	
+			ArrayList<Company> dataList = new ArrayList<Company>();
+			int colLen = sheet.getColumn(0).length;
+			
+			for(int j = 1 ; j <= colLen - 1 ; j++)
+			{
+				col01Cell = sheet.getCell(0,j);
+				col02Cell = sheet.getCell(1,j);    
+				col03Cell = sheet.getCell(2,j);      
+				col04Cell = sheet.getCell(3,j);      
+				col05Cell = sheet.getCell(4,j);      
+				col06Cell = sheet.getCell(5,j);      
+				col07Cell = sheet.getCell(6,j);      
+				col08Cell = sheet.getCell(7,j);      
+				col09Cell = sheet.getCell(8,j);      
+				col10Cell = sheet.getCell(9,j);       
+				col11Cell = sheet.getCell(10,j);       
+				col12Cell = sheet.getCell(11,j);       
+				col13Cell = sheet.getCell(12,j);       
+				col14Cell = sheet.getCell(13,j);  
+								
+				Company bean = new Company();
+				bean.setPost(bean.getZipcode1() + "-" + bean.getZipcode2());
+				bean.setStatus("N");
+				PropertyUtils.setProperty(bean, "sa_no", col02Cell.getContents());
+				PropertyUtils.setProperty(bean, "company", col06Cell.getContents());
+				PropertyUtils.setProperty(bean, "ceo_name", col11Cell.getContents());
+				PropertyUtils.setProperty(bean, "tel", col09Cell.getContents());
+				PropertyUtils.setProperty(bean, "post", col08Cell.getContents());
+				PropertyUtils.setProperty(bean, "addr1", col07Cell.getContents());
+				PropertyUtils.setProperty(bean, "hp", col14Cell.getContents());
+
+				PropertyUtils.setProperty(bean, "industry_cd", new Integer(4));
+				PropertyUtils.setProperty(bean, "year_cd", "2011");
+
+				dao.insertCompany(bean);
+			}
+		
+	    }
+	    catch(Exception e)
+	    {
+	    	e.printStackTrace();
+	    	result = false;
+	    }
+	    
 	}
 
 	public void addCheckFormForMigration(ZValue zvl) throws Exception {
