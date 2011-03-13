@@ -50,7 +50,7 @@ public class FreecheckUserService {
 			String grade_cd = result.getGrade_cd();
 			if(grade_cd.equals("02")) {
 				//result.make_find_type_cd();
-				List<ZValue> masterList = dao.selectMasterCdDataByCompany(bean.getId());
+				List<ZValue> masterList = dao.selectMasterCdDataByCompany(result.getId());
 				String masterCdData = null;
 				if(masterList != null && masterList.size() > 0)
 				{
