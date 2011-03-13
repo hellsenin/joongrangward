@@ -8,17 +8,19 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <form name="mfrm" method="post" action="/health/freecheck/forCheck.do?categoryId=${param.categoryId}" enctype="multipart/form-data">
-	
-			<table class="default_view" summary="제목, 주관부서, 등록일, 조회수, 첨부파일, 내용으로 구성되어 있습니다.">
+
+	<div id="contents">	
+	<div class="mt15">			
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_list" summary="제목, 주관부서, 등록일, 조회수, 첨부파일, 내용으로 구성되어 있습니다.">
 				<caption>민원서식 상세내용</caption>
 				<colgroup>
-					<col style="width:20%;"/>
-					<col style="width:80%;"/>
+				  <col style="width:18%;" />
+				  <col style="width:*;" />
 				</colgroup>
-				<tbody>
-					<tr class="fir">
-						<th scope="row">분류</th>
-						<td class="output">
+				 <tbody>
+					<tr>
+					  <th>분류</th>
+						<td class="aleft">
 							<c:choose>
 								<c:when test="${result.type_cd == '02'}">자율점검표</c:when>
 								<c:when test="${result.type_cd == '03'}">법령인지도</c:when>
@@ -26,22 +28,22 @@
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">제목</th>
-						<td class="output">${result.title}</td>
+						<th>제목</th>
+						<td class="aleft">${result.title}</td>
 					</tr>
 					<tr>
-						<th scope="row">점검기간</th>
-						<td class="output"><fmt:formatDate value="${result.start_dt}" pattern="yyyy년MM월dd일"/> ~ <fmt:formatDate value="${result.end_dt}" pattern="yyyy년MM월dd일"/></td>
+						<th>점검기간</th>
+						<td class="aleft"><fmt:formatDate value="${result.start_dt}" pattern="yyyy년MM월dd일"/> ~ <fmt:formatDate value="${result.end_dt}" pattern="yyyy년MM월dd일"/></td>
 					</tr>
 					<tr >
-						<th scope="row">점검내용</th>
-						<td class="output">
+						<th>점검내용</th>
+						<td class="aleft">
 							${result.contents}
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">첨부파일</th>
-						<td class="output">
+						<th>첨부파일</th>
+						<td class="aleft">
 							<c:url value="/health/freecheck/download.do" var="download_url">
 								<c:param name="file" value="${result.attachfile1}"></c:param>
 							</c:url>
@@ -77,7 +79,7 @@
 			<input type="hidden" name="master_cd" value="${result.master_cd}"/>
 			<input type="hidden" name="type_cd" value="${Bean.type_cd}"/>
 			
-<div class="board_btn_set mt13">
+<p class="btn_ri mt15">
 			<span class="btn_del"><input type="submit" value="온라인점검" /></span>
 		
 			<c:url var="list_action" value="/health/freecheck/list.do?categoryId=${param.categoryId}">
@@ -98,6 +100,10 @@
 				<c:param name="type_cd_10_yn" value="${Bean.type_cd_10_yn}"/>
 				<c:param name="type_cd_11_yn" value="${Bean.type_cd_11_yn}"/>
 			</c:url>
-			<span class="btn_del"><a href="${list_action}">목록보기</a></span>
-	</div>
+			<a href="${list_action}"><img src="../../../images/btn_list.gif" alt="목록" /></a>
+</p>
 		</form>
+
+</div>
+</div>
+
