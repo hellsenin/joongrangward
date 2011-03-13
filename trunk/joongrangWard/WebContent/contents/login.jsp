@@ -52,12 +52,12 @@
 					<dl>
 						<dt><label for="industryCd">업종명</label></dt>
 						<dd>
-							<c:forEach var="industry" items="${industryList}">
 							<select id="industryCd" name="industry_cd">
 								<option>업종선택</option>
+							<c:forEach var="industry" items="${industryList}">
 								<option value="${industry.industryCd}">${industry.name}</option>
-							</select>
 							</c:forEach>
+							</select>
 						</dd>
 					</dl>
 					<dl>
