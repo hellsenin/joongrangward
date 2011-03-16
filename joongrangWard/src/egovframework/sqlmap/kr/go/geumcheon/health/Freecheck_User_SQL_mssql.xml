@@ -408,7 +408,7 @@
     </select>
     
     <!-- 점검 대상(HETB_CK_MASTER)에 대한 점검 항목 불러오기 (질문 불러오기 3/4) : 점검 항목(HETB_CK_QUESTION) 불러오기 -->
-    <select id="FreecheckUserDAO.selectQuestion" parameterClass="Company" resultClass="java.util.HashMap">
+    <select id="FreecheckUserDAO.selectQuestion2" parameterClass="Company" resultClass="java.util.HashMap">
     /* FreecheckUserDAO.selectQuestion */
     	<![CDATA[
 			SELECT	A.QUESTION_CD
@@ -443,6 +443,95 @@
 											  AND PRIOR QUESTION_CD = QUESTION_CD
 											  AND PRIOR SPAN = SPAN -1 
 									GROUP BY MASTER_CD, COMPANY_CD, QUESTION_CD
+								  )
+				  B ON A.MASTER_CD = B.MASTER_CD AND A.QUESTION_CD = B.QUESTION_CD 
+			WHERE A.MASTER_CD = $master_cd$ AND A.STATUS = 'N'
+			  /* 
+			  AND A.MASTER_CD = B.MASTER_CD
+			  AND A.QUESTION_CD = B.QUESTION_CD
+			  */
+			ORDER BY A.QUESTION_CD ASC
+    	]]>
+    </select>
+    
+    <!-- 점검 대상(HETB_CK_MASTER)에 대한 점검 항목 불러오기 (질문 불러오기 3/4) : 점검 항목(HETB_CK_QUESTION) 불러오기 -->
+    <select id="FreecheckUserDAO.selectQuestion" parameterClass="Company" resultClass="java.util.HashMap">
+    /* FreecheckUserDAO.selectQuestion */
+    	<![CDATA[
+			
+	WITH BPM_CTE
+	(
+		MASTER_CD
+	  , COMPANY_CD
+	  , QUESTION_CD
+	  , QUESTION2_CD
+	  , OTHER
+	  , SPAN
+	  ) 
+	AS 
+	(
+	   SELECT	MASTER_CD
+			  , COMPANY_CD
+			  , QUESTION_CD
+			  , QUESTION2_CD
+			  , OTHER
+			  , SPAN
+	   FROM
+	   (
+		   SELECT	MASTER_CD
+				  , COMPANY_CD
+				  , QUESTION_CD
+				  , QUESTION2_CD
+				  , OTHER
+				  , ROW_NUMBER() OVER (PARTITION BY MASTER_CD, COMPANY_CD, QUESTION_CD ORDER BY QUESTION_CD, QUESTION2_CD) SPAN
+			FROM HETB_CK_ANSWER2 A
+			WHERE MASTER_CD  = $master_cd$
+			  AND COMPANY_CD = $company_cd$
+			  AND STATUS     = 'N'
+		) AA
+
+		UNION ALL
+		
+	   SELECT	BB.MASTER_CD
+			  , BB.COMPANY_CD
+			  , BB.QUESTION_CD
+			  , BB.QUESTION2_CD
+			  , BB.OTHER
+			  , BB.SPAN
+	   FROM
+	   (
+		   SELECT	MASTER_CD
+				  , COMPANY_CD
+				  , QUESTION_CD
+				  , QUESTION2_CD
+				  , OTHER
+				  , ROW_NUMBER() OVER (PARTITION BY MASTER_CD, COMPANY_CD, QUESTION_CD ORDER BY QUESTION_CD, QUESTION2_CD) SPAN
+			FROM HETB_CK_ANSWER2 B
+			WHERE MASTER_CD  = $master_cd$
+			  AND COMPANY_CD = $company_cd$
+			  AND STATUS     = 'N'
+		) BB
+		 INNER JOIN BPM_CTE P
+		 ON BB.SPAN = P.SPAN-1
+		
+	)
+			SELECT	A.QUESTION_CD
+				  , A.QUESTION
+				  , A.QUEST_TYPE_CD
+				  , A.MULTI_CHECK_YN
+				  , A.OTHER_YN
+				  , B.QUESTION2_CD
+				  , B.OTHER
+			FROM HETB_CK_QUESTION A
+				 LEFT OUTER JOIN (
+						SELECT 
+							MASTER_CD
+						  , COMPANY_CD
+						  , QUESTION_CD
+						  , QUESTION2_CD
+						  , OTHER
+						FROM BPM_CTE 
+	--GROUP BY MASTER_CD, COMPANY_CD, QUESTION_CD, OTHER
 								  )
 				  B ON A.MASTER_CD = B.MASTER_CD AND A.QUESTION_CD = B.QUESTION_CD 
 			WHERE A.MASTER_CD = $master_cd$ AND A.STATUS = 'N'
