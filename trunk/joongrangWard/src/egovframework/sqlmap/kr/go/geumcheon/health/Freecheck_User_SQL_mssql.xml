@@ -513,7 +513,7 @@
 		) BB
 		 INNER JOIN BPM_CTE P
 		 ON BB.SPAN = P.SPAN-1
-		
+		 WHERE BB.SPAN = 1
 	)
 			SELECT	A.QUESTION_CD
 				  , A.QUESTION
@@ -642,8 +642,7 @@
     	<![CDATA[ 
     		INSERT 
 				INTO	HETB_CK_ANSWER 
-					(	answer_cd
-						, company_cd
+					(	 company_cd
 						, company_id
 						, master_cd
 						, sangho_name
@@ -703,8 +702,7 @@
 						, update_dt
 						, update_ip
 						, update_id )
-				VALUES ( (SELECT ISNULL(MAX(answer_cd), 0)+1 FROM HETB_CK_ANSWER)
-						, $company_cd$
+				VALUES (  $company_cd$
 						, '$company_id$'
 						, $master_cd$
 						, '$sangho_name$'
@@ -773,16 +771,15 @@
     	<![CDATA[ 
     		INSERT INTO 
 			HETB_CK_ANSWER2 (
-				ANSWER2_CD
-				, COMPANY_CD
+				 COMPANY_CD
 				, COMPANY_ID
 				, MASTER_CD
 				, QUESTION_CD
 				, QUESTION2_CD
 				, OTHER)
 			VALUES( 
-				(SELECT ISNULL(MAX(ANSWER2_CD), 0)+1 FROM HETB_CK_ANSWER2)
-				, $company_cd$
+				
+				 $company_cd$
 				, '$company_id$'
 				, $master_cd$
 				, $question_cd$
