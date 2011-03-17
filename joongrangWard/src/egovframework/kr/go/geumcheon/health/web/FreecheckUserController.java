@@ -203,7 +203,7 @@ public class FreecheckUserController {
 		if("writable".equals(bean.getView_state()) || "update".equals(bean.getView_state())) {
 			String divideCd = company.getDivide_cd();
 			//if("k10".equals(divideCd) || "k01".equals(divideCd) || "k02".equals(divideCd))
-			if(true)
+			if(false)
 			{
 				List<ZValue> handleItemList = service.selectHandleitemListU(company);
 				model.addAttribute("handleItemList", handleItemList);
@@ -214,12 +214,13 @@ public class FreecheckUserController {
 				Company param = new Company();
 				param.setId(bean.getCompany_id());
 				service.loginFreecheck(param, model);
-				
 				param = (Company) model.get("company");
-	
 				int company_cd = bean.getCompany_cd();
 				int master_cd = bean.getMaster_cd();
 				String year_cd = bean.getYear_cd();
+				System.out.println("//////////////////////////////////////////////////////////////////////////////");
+				System.out.println("company_cd : "+company_cd);
+				System.out.println("//////////////////////////////////////////////////////////////////////////////");
 				param.setCompany_cd(company_cd);
 				param.setMaster_cd(master_cd);
 				param.setYear_cd(year_cd);
