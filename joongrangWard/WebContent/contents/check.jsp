@@ -44,10 +44,11 @@ function checkAndSubmit(f) {
 	
 };
 </script>
+<div id="contents">
 
-	<h4>점검 정보</h4>
+	<h4>점검 정보</h4><br/>
 	
-	<table class="default_view" summary="제목, 주관부서, 등록일, 조회수, 첨부파일, 내용으로 구성되어 있습니다.">
+	<table class="table_list table_view" summary="제목, 주관부서, 등록일, 조회수, 첨부파일, 내용으로 구성되어 있습니다." cellspacing='0' cellpadding='0'>
 		<caption>민원서식 상세내용</caption>
 		<colgroup>
 			<col style="width:20%;"/>
@@ -94,11 +95,11 @@ function checkAndSubmit(f) {
 		<h4>점검 항목</h4>
 		
 		<!-- write form start -->
-		<table id="check_form" summary="응모 할 수 있는 항목입니다" class="default_view">
+		<table id="check_form" summary="응모 할 수 있는 항목입니다" class="table_list list_check" cellspacing='0' cellpadding='0'>
 			<caption>응모 할 수 있는 항목</caption>
 			<colgroup>
-				<col style="width:7%;"/>
-				<col style="width:93%;"/>
+				<col style="width:20%;"/>
+				<col style="width:80%;"/>
 			</colgroup>
 			<tbody>
 				<c:if test="${fn:length(questionList) > 0}">
@@ -107,7 +108,7 @@ function checkAndSubmit(f) {
 							<th>${qStatus.count}</th>
 							<td class="tal">
 								<dl>
-									<dt style="margin-top: 6px;">${fn:replace(questionItem.QUESTION,crlf,"<br/>")}</dt>
+									<dt style="margin-top: 6px;">${fn:replace(questionItem.QUESTION,crlf,"")}</dt>
 									<dd style="margin-top: 6px; margin-bottom: 6px;">
 										<!-- 주관식 -->
 										<c:choose>
@@ -123,35 +124,39 @@ function checkAndSubmit(f) {
 												<input type="hidden" name="other_${qStatus.count}" value=""/>
 												<c:forEach items="${questionItem.answerList}" var="answerItem" varStatus="aStatus">
 													<!-- 객관식 --> <!-- questionItem.QUEST_TYPE_CD == 'A' 인지 체크를 해줘야하지만 그렇지 않아도 A만 나올 것임 -->
-													
+													<span class='item'>
 														<c:if test="${questionItem.MULTI_CHECK_YN == 'Y'}">
 															<input type="hidden" name="checkbox_count_${qStatus.count}" value="${fn:length(questionItem.answerList)}" />
 														</c:if>
 														<c:choose>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'Y'}">
+																<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">
 																<input type="checkbox" title="문제 ${qStatus.count}번" name="question2_cd_${qStatus.count}_${aStatus.count}" value="${answerItem.QUESTION2_CD}" id="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, answerItem.QUESTION2_CD) >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/>
 															</c:when>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'N'}">
+																<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">
 																<input type="radio" title="문제 ${qStatus.count}번" name="question2_cd_${qStatus.count}" value="${answerItem.QUESTION2_CD}" id="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, answerItem.QUESTION2_CD) >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/>
 															</c:when>
 														</c:choose>
 														${answerItem.QUESTION2}
 <!--													<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">-->
 <!--													</label>-->
-													<br/>
+													</label></span>
 												</c:forEach>
 												<!-- 기타항목 -->
 												<c:if test="${questionItem.OTHER_YN == 'Y'}">
 
 														<c:choose>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'Y'}">
+																<label for="answer2_${qStatus.count}_99}">
 																<input type="checkbox" title="문제 ${qStatus.count}번" name="question2_cd_${qStatus.count}" value="9999" id="answer2_${qStatus.count}_99}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, ':9999:') >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/>
 															</c:when>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'N'}">
+																<label for="answer2_${qStatus.count}_99}">
 																<input type="radio" title="문제 ${qStatus.count}번" name="question2_cd_${qStatus.count}" value="9999" id="answer2_${qStatus.count}_99}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, ':9999:') >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/>
 															</c:when>
 														</c:choose>
-														기타
+														기타</label>
 <!--													<label for="answer2_${qStatus.count}_99">														-->
 <!--													</label>-->
 												</c:if>
@@ -258,7 +263,6 @@ function checkAndSubmit(f) {
 					<c:param name="master_cd" value="${result.master_cd}"/>
 				</c:url>
 	<span class="btn_list"><a href="${list_action}">${Bean.view_state == writable ? '취소' : '목록'}보기</a></span>
-</div>
-			
-			
 	</form>
+	</div>
+</div>
