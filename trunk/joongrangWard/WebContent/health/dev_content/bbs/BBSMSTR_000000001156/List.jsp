@@ -9,22 +9,20 @@
 <script type="text/javascript">
 
 	function fn_bbs_search_check() {
-
-	var searchCnd = document.frm.searchCnd.value;
-	var searchWrd = document.frm.searchWrd.value;
+		var searchCnd = document.getElementsByName("searchCnd").value;
+		var searchWrd = document.getElementsByName("searchWrd").value;
 	
 		if(searchCnd == "" || searchCnd == null){
-			
 			alert("검색조건을 선택하세요");
 			return false;
 		
-		} else if(searchWrd == "" || searchWrd == null){
-			
+		} 
+		else if(searchWrd == "" || searchWrd == null){
 			alert("검색어를 입력하세요");
 			return false;
 		
-		} else {
-			
+		} 
+		else {
 			document.frm.searchWrd.value = searchString;
 			return true;
 		}
@@ -49,7 +47,7 @@
         </select>
 		<label for="searchWrd" class="blind">검색어</label>
         <input type="text" id="searchWrd" class="text" name="searchWrd" value='<c:out value="${searchVO.searchWrd}"/>' />
-			  <input class="vm" name="" type="image" src="/images/btn_search.gif" alt="검색" />
+			  <input class="vm" type="image" src="/images/btn_search.gif" alt="검색"  onclick="fn_bbs_search_check()"/>
 			</div>
         <!-- //게시물검색 -->
 	
@@ -78,7 +76,7 @@
               <td class="aleft"><a href="/health/bbs/selectBoardArticle.do?categoryId=${param.categoryId}&amp;bbsId=${param.bbsId}&amp;nttId=${result.nttId}"><c:out value="${result.nttSj}" /></a></td>
               <td>${result.option1}~${result.option2}</td>
               <td>${result.option3}</td>
-              <td><img src="/images/file_down.gif" alt="첨부파일 다운로드" />
+              <td>
             	<c:if test="${result.fileNm != null}">
 					<a href="/cmm/fms/FileDown.do?atchFileId=<c:out value='${result.atchFileId}'/>&fileSn=<c:out value='${result.fileSeq}'/>"><img src="/images/file_down.gif" alt="첨부파일" /></a>
 				</c:if>

@@ -18,7 +18,10 @@
 	}
 	
 </script>
-
+<div id="contents">
+			<div id="location">HOME &gt; 자율점검서식</div>
+			<h3><img alt="자율점검서식" src="/images/h3_02.gif"></h3>
+			<br/>
 <p class="title_deco"></p>
 <div class="body">
 <form name="frm" method="post" action="/health/bbs/deleteBoardArticle.do" onsubmit="return fn_egov_delete_notice();">
@@ -27,7 +30,7 @@
 <input type="hidden" name="nttId" value="<c:out value='${result.nttId}'/>" />
 <input type="hidden" name="categoryId" value="<c:out value='${param.categoryId}'/>" />
 
-<table summary="제목, 작성자, 등록일자, 조회수, 내용, 첨부파일 제공" class="default_view">
+<table summary="제목, 작성자, 등록일자, 조회수, 내용, 첨부파일 제공" class="table_list table_view" cellspacing='0' cellpadding='0'>
     <caption>자율점섬서식 내용보기</caption>
     <tr>
         <th width="10%" class="title_1	" scope="row">제목</th>
@@ -37,7 +40,7 @@
         <th scope="row">구분</th>
         <td><p>건강상담 (원본 게시글 위치)</p></td>
         <th width="10%" scope="row">작성자 </th>
-        <td><c:out value="${result.ntcrNm}" /></td>
+        <td><c:out value="${result.ntcrNm}" />&nbsp;</td>
     </tr>
     <tr>
         <th scope="row">등록일</th>
@@ -50,28 +53,31 @@
     </tr>
     <tr>
         <th scope="row">첨부파일 </th>
-        <td colspan="3"> 
+        <td colspan="3" class='file_filde'> 
         	<c:import url="/cmm/fms/selectFileInfs.do" charEncoding="utf-8">
 				<c:param name="param_atchFileId" value="${result.atchFileId}" />
 			</c:import>
 		</td>
     </tr>
 </table>
-
-<table summary="답변내용 포함" class="answer_view">
+</br>
+<table summary="답변내용 포함" class="table_list" cellspacing='0' cellpadding='0'>
     <caption>답변내용</caption>
     <tr class="fir">
         <th scope="row">답변내용</th>
         <td>답변 준비중입니다.</td>
     </tr>
 </table>
+</br>
 
-<div class="board_btn_set mt13">
+<div class="btn_ri mt13">
 	<c:if test="${result.frstRegisterId == sessionUniqId}">
+	<!-- 
 	<span class="btn_del"><a href="/health/bbs/forUpdateBoardArticle.do?categoryId=${param.categoryId}&amp;bbsId=${param.bbsId}&amp;nttId=${result.nttId}">수정하기</a></span>
 	<span class="btn_del"><input type="submit" value="삭제하기" /></span>
+	 -->
 	</c:if>
-    <span class="btn_list"><a href="/health/bbs/selectBoardList.do?categoryId=${param.categoryId}&amp;bbsId=${param.bbsId}">목록보기</a></span>
+    <span class="btn_list"><a href="/health/bbs/selectBoardList.do?categoryId=${param.categoryId}&amp;bbsId=${param.bbsId}"><img alt="목록" src="../../../images/btn_list.gif"></a></span>
 </div>
 
 </form>
