@@ -42,7 +42,7 @@
 			<div id="location">HOME > 인터넷 자율점검</div>
 			<h3><img src="/images/h3_01.gif" alt="인터넷 자율점검" /></h3>
 				<div class="top_txt"><img src="/images/top_txt.gif" alt="의료기관 등 자율점검을 인터넷 방식으로 변경하였습니다. 의료기관 및 약국 등 각 업소 개설자(대표자)의 적극적인 협조를 부탁드리며, 발송된 공문과 서식 등을 참고하여 자율점검표를 성실히 기한 내에 입력하여 주시기 바랍니다." /></div>
-				<p class="btn_ri mb15"><img src="/images/btn_01.gif" alt="인터넷자율점검 작성방법 보기" /></p>
+				<p class="btn_ri mb15"><a href="/health/bbs/selectBoardList.do?bbsId=BBSMSTR_000000001156"><img src="/images/btn_01.gif" alt="인터넷자율점검 작성방법 보기" /></a></p>
 			
 			<div class="notice ">지금은 자율점검 기간이 아닙니다.</div>
 			
@@ -69,7 +69,7 @@
 						<dd><input id="ceoName" name="ceo_name" type="text" class="txt" /></dd>
 					</dl>
 					<dl>
-						<dt>사업자등록번호</dt>
+						<dt>허가<br/>(등록&middot;신고)번호 </dt>
 						<dd><input id="saNo" name="sa_no" type="text" class="txt" /></dd>
 					</dl>
 					

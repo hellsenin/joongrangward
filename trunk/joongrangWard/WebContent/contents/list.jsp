@@ -11,6 +11,7 @@
 <div id="contents">
 		<h4>${company.company} - ${company.ceo_name}님의 자율점검 리스트 입니다.</h4>
 </div>
+</br>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_list" summary="번호, 제목, 점검기간, 상태, 등록일자로 구성되어 있습니다. 목록 제목을 클릭하면 상세내용으로 이동합니다.">
 		<caption>자율점검표 작성방법</caption>
 		<colgroup>
