@@ -50,11 +50,11 @@
                 <li>
                 <span style="width: 250px">
                 	<label for="id"><img src="/health/open_content/images/comment/login_id.gif" alt="아이디" /></label> 
-                	<input name="id" type="text" id="id" value="2010010563" class="txt" style="width:150px;"/>
+                	<input name="id" type="text" id="id" value="admin" class="txt" style="width:150px;"/>
                 </span>					
                 <span style="width: 250px">
                 	<label for="password"><img src="/health/open_content/images/comment/login_pw.gif" alt="비밀번호" /></label>
-                	<input name="passwd" type="password" id="password" value="680216" class="txt" style="width:150px;"/>
+                	<input name="passwd" type="password" id="password" value="admin" class="txt" style="width:150px;"/>
                 </span>
                 	<input type="image" src="/health/open_content/images/btn/btn_l_login.gif" alt="로그인" class="inbtn" />
                 </li>	
