@@ -30,6 +30,9 @@
             <entry key="poll.fileStorePath" value="c:/Temp/"/>
             
             <entry key="WEB_ROOT" value="C:/workspace/gc_health/WebContent/"/>
+            
+            <entry key="id"     value="admin"/>
+            <entry key="passwd" value="admin"/>
                                                 
          </map>
       </property>
