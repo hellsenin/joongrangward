@@ -115,7 +115,8 @@ function checkAndSubmit(f) {
 											<c:when test="${questionItem.QUEST_TYPE_CD == 'B'}">
 												<input type="hidden" name="question_cd_${qStatus.count}" value="${questionItem.QUESTION_CD}"></input>
 												<input type="hidden" name="question2_cd_${qStatus.count}" value="${questionItem.QUESTION2_CD}"></input>
-												<input type="text" title="문제 ${qStatus.count}번" name="other_${qStatus.count}" value="${questionItem.OTHER}" class="t_text vam" style="width: 98%; padding-left: 3px;" <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/>
+												
+					<textarea id="contents" cols="50" rows="20" title="문제 ${qStatus.count}번" name="other_${qStatus.count}" style="width:100%;" class="board1">${questionItem.OTHER}</textarea>
 											</c:when>
 											
 											<c:otherwise>
@@ -131,7 +132,7 @@ function checkAndSubmit(f) {
 														<c:choose>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'Y'}">
 																<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">
-																<input type="checkbox" title="문제 ${qStatus.count}번" name="question2_cd_${qStatus.count}_${aStatus.count}" value="${answerItem.QUESTION2_CD}" id="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, answerItem.QUESTION2_CD) >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/>
+																<input type="checkbox" title="문제 ${qStatus.count}번" name="question2_cd_${qStatus.count}_${aStatus.count}" value="${answerItem.QUESTION2_CD}" id="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, answerItem.QUESTION2_CD) >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/><!-- [${questionItem.QUESTION2_CD},${answerItem.QUESTION2_CD}] -->
 															</c:when>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'N'}">
 																<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">
@@ -142,6 +143,7 @@ function checkAndSubmit(f) {
 <!--													<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">-->
 <!--													</label>-->
 													</label></span>
+													<br/>
 												</c:forEach>
 												<!-- 기타항목 -->
 												<c:if test="${questionItem.OTHER_YN == 'Y'}">
