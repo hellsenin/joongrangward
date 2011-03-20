@@ -4,8 +4,57 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <script type="text/javascript" src="/health/open_content/system/js/miya_validator.js"></script>
+<script type="text/javascript" src="/health/open_content/system/js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="/health/open_content/system/js/jslb_ajax.js"></script>
 
 <script type="text/javascript">
+
+	function selectCompanyList(obj) 
+	{
+		var url = "/health/freecheck/selectCompanyList.do";
+		var param = "&industry_cd="+obj.value;  
+		sendRequest(callbackSelectCompanyList, param, 'POST', url, true, true);
+	}
+	
+	function callbackSelectCompanyList(oj)
+	{
+	    try 
+	    {
+	        var selectObj = document.getElementById("company");
+	    	var jsonData = oj.responseText;
+	        var j = eval('(' + jsonData + ')');
+	        var _company = j.company;
+	        if(_company)
+	        {
+		        var companyData = _company.split("|");;
+			  	var opt = document.createElement("OPTION");
+				selectObj.innerHTML = "";
+			  	selectObj.options.add(opt);
+			  	opt.innerText = "업소명을 선택하세요";
+			  	opt.value = "";
+		        
+		        for(i=0;i<companyData.length;i++)
+		        {
+		        	var opt = document.createElement("OPTION");
+		        	selectObj.options.add(opt);
+		        	opt.innerText = companyData[i];
+		        	opt.value = companyData[i];
+		        }
+	        }
+	        else
+	        {
+			  	var opt = document.createElement("OPTION");
+				selectObj.innerHTML = "";
+			  	selectObj.options.add(opt);
+			  	opt.innerText = "업소명을 선택하세요";
+			  	opt.value = "";
+	        }
+	    } 
+	    catch (err)
+	    {
+	        alert("FUNCTION : callbackSelectCompanyList() " + err.description);
+	    }
+	}
 
 	function checkForm(form)
 	{
@@ -52,7 +101,7 @@
 					<dl>
 						<dt><label for="industryCd">업종명</label></dt>
 						<dd>
-							<select id="industryCd" name="industry_cd">
+							<select id="industryCd" name="industry_cd" onchange="selectCompanyList(this)">
 								<option>업종선택</option>
 							<c:forEach var="industry" items="${industryList}">
 								<option value="${industry.industryCd}">${industry.name}</option>
@@ -62,7 +111,11 @@
 					</dl>
 					<dl>
 						<dt>업소명</dt>
-						<dd><input id="company" name="company" type="text" class="txt" /></dd>
+						<dd>
+							<select id="company" name="company" class="txt" >
+								<option value="">업소명을 선택하세요</option>
+							</select>
+						</dd>
 					</dl>
 					<dl>
 						<dt>대표자성명</dt>
