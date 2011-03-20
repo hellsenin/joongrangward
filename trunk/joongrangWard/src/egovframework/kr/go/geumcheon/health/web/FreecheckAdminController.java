@@ -1820,4 +1820,17 @@ public class FreecheckAdminController {
     	//WebFactory.printHtml(response, "성공적으로 등록되었습니다.", "/admin/freecheck/company/list.do?yearCd="+zvl.getString("yearCd"));
 	}
 
+	@RequestMapping("/admin/loginPage.do")
+	public String getlogin(
+			HttpServletRequest request,
+			HttpServletResponse response,	
+			ModelMap model) throws Exception
+	{
+    	ZValue zvl = WebFactory.getAttributes(request);
+    	
+    	String id     = zvl.getString("id");
+    	String passwd = zvl.getString("passwd");
+    	
+		return "admin/loginPage";
+	}
 }
