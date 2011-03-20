@@ -1811,6 +1811,11 @@ public class FreecheckAdminController {
     		zvl.put("path", "c:/5.xls");
     		zvl.put("industry_cd", "11");
     	}
+    	else
+    	{
+    		zvl.put("path", "c:/"+zvl.getString("type")+".xls");
+    		zvl.put("industry_cd", zvl.getString("type"));
+    	}
 		service.addCompanyForMigrationFromExcel2(zvl);
     	//WebFactory.printHtml(response, "성공적으로 등록되었습니다.", "/admin/freecheck/company/list.do?yearCd="+zvl.getString("yearCd"));
 	}
