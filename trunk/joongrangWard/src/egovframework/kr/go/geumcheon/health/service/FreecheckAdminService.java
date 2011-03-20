@@ -1359,23 +1359,15 @@ public class FreecheckAdminService {
 
 	    try
 	    {
-			File f = new File("c:/2.xls");
+	    	String path = zvl.getString("path");
+			File f = new File(path);
 			Workbook workbook = Workbook.getWorkbook(f); 
 			Sheet sheet = workbook.getSheet(0); 
-			Cell col01Cell;    //순번 a
-			Cell col02Cell;     //구허가번호
-			Cell col03Cell;      //신고일자
-			Cell col04Cell;     //영업구분
-			Cell col05Cell;     //신고구굽
-			Cell col06Cell;     //영업소명
-			Cell col07Cell;     //소재지
-			Cell col08Cell;     //우편
-			Cell col09Cell;     //전화
-			Cell col10Cell;     //개인법인
-			Cell col11Cell;     //개설자명
-			Cell col12Cell;     //법인번호
-			Cell col13Cell;     //전번
-			Cell col14Cell;     //핸폰
+			Cell col01Cell;    //등록번호 a
+			Cell col02Cell;     //업소명
+			Cell col03Cell;      //행정동
+			Cell col04Cell;     //소재지
+			Cell col05Cell;     //대표자
 	
 			ArrayList<Company> dataList = new ArrayList<Company>();
 			int colLen = sheet.getColumn(0).length;
@@ -1386,29 +1378,20 @@ public class FreecheckAdminService {
 				col02Cell = sheet.getCell(1,j);    
 				col03Cell = sheet.getCell(2,j);      
 				col04Cell = sheet.getCell(3,j);      
-				col05Cell = sheet.getCell(4,j);      
-				col06Cell = sheet.getCell(5,j);      
-				col07Cell = sheet.getCell(6,j);      
-				col08Cell = sheet.getCell(7,j);      
-				col09Cell = sheet.getCell(8,j);      
-				col10Cell = sheet.getCell(9,j);       
-				col11Cell = sheet.getCell(10,j);       
-				col12Cell = sheet.getCell(11,j);       
-				col13Cell = sheet.getCell(12,j);       
-				col14Cell = sheet.getCell(13,j);  
+				col05Cell = sheet.getCell(4,j); 
 								
 				Company bean = new Company();
 				bean.setPost(bean.getZipcode1() + "-" + bean.getZipcode2());
 				bean.setStatus("N");
-				PropertyUtils.setProperty(bean, "sa_no", col02Cell.getContents());
-				PropertyUtils.setProperty(bean, "company", col06Cell.getContents());
-				PropertyUtils.setProperty(bean, "ceo_name", col11Cell.getContents());
-				PropertyUtils.setProperty(bean, "tel", col09Cell.getContents());
-				PropertyUtils.setProperty(bean, "post", col08Cell.getContents());
-				PropertyUtils.setProperty(bean, "addr1", col07Cell.getContents());
-				PropertyUtils.setProperty(bean, "hp", col14Cell.getContents());
+				PropertyUtils.setProperty(bean, "sa_no", col01Cell.getContents());
+				PropertyUtils.setProperty(bean, "company", col02Cell.getContents());
+				PropertyUtils.setProperty(bean, "ceo_name", col05Cell.getContents());
+				PropertyUtils.setProperty(bean, "tel", "");
+				PropertyUtils.setProperty(bean, "post", "");
+				PropertyUtils.setProperty(bean, "addr1", col04Cell.getContents());
+				PropertyUtils.setProperty(bean, "hp", "");
 
-				PropertyUtils.setProperty(bean, "industry_cd", new Integer(4));
+				PropertyUtils.setProperty(bean, "industry_cd", new Integer(zvl.getInt("industryCd")));
 				PropertyUtils.setProperty(bean, "year_cd", "2011");
 
 				dao.insertCompany(bean);

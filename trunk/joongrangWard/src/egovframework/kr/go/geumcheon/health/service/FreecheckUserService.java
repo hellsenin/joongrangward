@@ -38,8 +38,11 @@ public class FreecheckUserService {
 	public List<ZValue> selectIndustryList() {
 		return dao.selectIndustryList();
 	}
-	
-	
+
+	public List<ZValue> selectCompanyList(ZValue zvl) {
+		return dao.selectCompanyList(zvl);
+	}
+		
 	public boolean loginFreecheck(Company bean, ModelMap model) throws Exception {
 		
 		boolean condition = false;

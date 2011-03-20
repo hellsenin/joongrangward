@@ -22,6 +22,10 @@ public class FreecheckUserDAO extends EgovAbstractDAO {
 		return (List<ZValue>) list("FreecheckUserDAO.selectIndustryList", null);
 	}
 
+	public List<ZValue> selectCompanyList(ZValue zvl) {
+		return (List<ZValue>) list("FreecheckUserDAO.selectCompanyList", zvl);
+	}
+
 	/**
 	 * 자율점검 사용자 로그인
 	 * @param bean
