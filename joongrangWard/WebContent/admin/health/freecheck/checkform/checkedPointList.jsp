@@ -62,6 +62,7 @@ function checkForm(f)
 function viewAnswer(master_cd, company_cd, divide_cd) {
 	var openParam = "dialogWidth:830px;dialogHeight:600px;scroll:yes;status:no;center:yes;resizable:yes;";
 	var varParam = new Object();
+	
 	window.showModalDialog('/admin/freecheck/checkform/viewAnswer.do'+
 			'?company_cd='+company_cd+
 			'&master_cd='+master_cd+
@@ -174,7 +175,10 @@ function viewAnswer(master_cd, company_cd, divide_cd) {
 					
 					<!-- 문제수 -->
 					<td>
-						<a href="${actionUrl}">${item.questionCnt}</a>
+						<!-- <a href="${actionUrl}"> -->
+						<a href="" onclick="viewAnswer(${item.masterCd}, ${item.companyCd}, '${item.divideCd}'); return false;">
+						${item.questionCnt}
+						</a>
 					</td>
 					
 					<!-- 맞은문제수 -->
