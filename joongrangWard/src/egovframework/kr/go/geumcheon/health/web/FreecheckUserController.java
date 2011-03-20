@@ -218,7 +218,7 @@ public class FreecheckUserController {
 		if("writable".equals(bean.getView_state()) || "update".equals(bean.getView_state())) {
 			String divideCd = company.getDivide_cd();
 			//if("k10".equals(divideCd) || "k01".equals(divideCd) || "k02".equals(divideCd))
-			if(false)
+			if(true)
 			{
 				List<ZValue> handleItemList = service.selectHandleitemListU(company);
 				model.addAttribute("handleItemList", handleItemList);
