@@ -39,6 +39,7 @@ import egovframework.kr.go.geumcheon.health.vo.Master;
 import egovframework.kr.go.geumcheon.health.vo.Question;
 import egovframework.kr.go.geumcheon.health.vo.Question2;
 import egovframework.kr.go.geumcheon.health.vo.UsersVO;
+import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
@@ -55,7 +56,10 @@ public class FreecheckAdminController {
 
 	@Resource(name="pageUtil")
 	private PageUtil PageUtil;
-	
+
+    @Resource(name = "propertiesService")
+    protected EgovPropertyService propertyService;
+    
 	/**
 	 * 업종 관리 (조회)
 	 * @param bean
@@ -1821,16 +1825,21 @@ public class FreecheckAdminController {
 	}
 
 	@RequestMapping("/admin/loginPage.do")
-	public String getlogin(
-			HttpServletRequest request,
-			HttpServletResponse response,	
-			ModelMap model) throws Exception
-	{
+	public String getlogin( HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	ZValue zvl = WebFactory.getAttributes(request);
+    	String id          = zvl.getString("id");
+    	String passwd      = zvl.getString("passwd");
+    	String storeId     = propertyService.getString("id");
+    	String storePasswd = propertyService.getString("passwd");
+    	boolean res = false;
     	
-    	String id     = zvl.getString("id");
-    	String passwd = zvl.getString("passwd");
     	
-		return "admin/loginPage";
+    	if ( !"".equals(id) || id != null) {
+    		if(!"".equals(passwd) || passwd != null) {
+        		if(id.equals(storeId) && passwd.equals(storePasswd) ) res = true;
+        	} 
+    	} 
+    	
+		return res==true ? "" : "admin/loginPage";
 	}
 }
