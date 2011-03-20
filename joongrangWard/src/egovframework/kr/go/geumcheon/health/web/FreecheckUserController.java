@@ -50,6 +50,21 @@ public class FreecheckUserController {
 		return FRAME_PAGE;
 	}
 
+	@RequestMapping("/health/freecheck/selectCompanyList.do")
+	public void selectCompanyList(
+		 HttpServletRequest request
+		, HttpServletResponse response 
+		, ModelMap model) throws Exception {
+
+    	ZValue zvl = WebFactory.getAttributes(request);  
+		List<ZValue> list = service.selectCompanyList(zvl);
+    	zvl.put("resultCode", "1");
+		String resultValue = ZValue.getArrayJSONValue(list);
+		response.setContentType("application/x-json; charset=UTF-8");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(resultValue);
+	}
+
 	@RequestMapping("/health/freecheck/login.do")
 	public void login(
 		@ModelAttribute("Bean") Company bean

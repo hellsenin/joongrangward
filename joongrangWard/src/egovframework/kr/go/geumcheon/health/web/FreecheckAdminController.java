@@ -1801,11 +1801,17 @@ public class FreecheckAdminController {
 			ModelMap model) throws Exception
 	{
     	ZValue zvl = WebFactory.getAttributes(request);   
-    	if(zvl.getInt("type") == 1)
-    		service.addCompanyForMigrationFromExcel1(zvl);
-    	else
-    		service.addCompanyForMigrationFromExcel2(zvl);
-
+    	if(zvl.getInt("type") == 4)
+    	{
+    		zvl.put("path", "c:/4.xls");
+    		zvl.put("industry_cd", "13");
+    	} 
+    	else if(zvl.getInt("type") == 5)
+    	{
+    		zvl.put("path", "c:/5.xls");
+    		zvl.put("industry_cd", "11");
+    	}
+		service.addCompanyForMigrationFromExcel2(zvl);
     	//WebFactory.printHtml(response, "성공적으로 등록되었습니다.", "/admin/freecheck/company/list.do?yearCd="+zvl.getString("yearCd"));
 	}
 
