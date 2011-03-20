@@ -249,7 +249,7 @@ public class FreecheckUserService {
 				dao.checkQuestion2(a2);
 			}
 		} else if("update".equals(bean.getView_state())) {
-			dao.checkUpdateQuestion(bean);
+			//dao.checkUpdateQuestion(bean);
 			dao.deleteCheckedQuestion2(bean);
 			for (Answer a2 : answerList) {
 				dao.checkQuestion2(a2);
