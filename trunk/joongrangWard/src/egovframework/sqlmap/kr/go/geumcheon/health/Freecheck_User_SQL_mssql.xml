@@ -146,6 +146,7 @@
 				FROM	HETB_CK_COMPANY A
 		 		WHERE 	A.STATUS = 'N' 
 			    AND A.INDUSTRY_CD = #industryCd#
+			    ORDER BY COMPANY ASC
 		]]>
 	</select>
 	
