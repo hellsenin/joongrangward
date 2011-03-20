@@ -229,7 +229,7 @@ public class FreecheckUserController {
 				Company param = new Company();
 				param.setId(bean.getCompany_id());
 				service.loginFreecheck(param, model);
-				param = (Company) model.get("company");
+				//param = (Company) model.get("company");
 				int company_cd = bean.getCompany_cd();
 				int master_cd = bean.getMaster_cd();
 				String year_cd = bean.getYear_cd();
@@ -240,7 +240,7 @@ public class FreecheckUserController {
 				param.setMaster_cd(master_cd);
 				param.setYear_cd(year_cd);
 	
-				service.selectCheckStateList(param, model);
+				service.selectCheckStateList(company, model);
 				
 				model.addAttribute("Bean", param);
 				
@@ -252,7 +252,7 @@ public class FreecheckUserController {
 
 		model.addAttribute("includePage", includePage);
 		model.addAttribute("CURR_DATE", Calendar.getInstance().getTime());
-		return includePage;
+		return FRAME_PAGE;
 	}
 	
 
