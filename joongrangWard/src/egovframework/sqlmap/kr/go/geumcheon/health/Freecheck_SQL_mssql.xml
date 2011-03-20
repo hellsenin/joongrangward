@@ -1050,7 +1050,6 @@
 						WHERE	A.MASTER_CD = $master_cd$ 
 								AND A.STATUS = 'N' 
 								AND	A.COMPANY_CD = B.COMPANY_CD 
-						ORDER BY A.INSERT_DT DESC
 					) A 
 		]]>
 	</select>
