@@ -1034,23 +1034,11 @@
 	<select id="FreecheckAdminDAO.selectCheckedCompanyListTotCnt" parameterClass="Master" resultClass="int">
 	/* FreecheckAdminDAO.selectCheckedCompanyListTotCnt */
 		<![CDATA[
-			SELECT	COUNT(*)
-			FROM	(
-						SELECT	A.COMPANY_CD
-						, B.COMPANY
-						, B.INDUSTRY_CD 
-						, ISNULL(C.NAME, ' ') INDUSTRY_NAME
-						, B.CEO_NAME
-						, B.TEL
-						, A.INSERT_DT
-						, C.DIVIDE_CD
+			
+						SELECT	COUNT(A.COMPANY_CD)
 						FROM	HETB_CK_ANSWER A
-							  , HETB_CK_COMPANY B
-								RIGHT OUTER JOIN HETB_CK_INDUSTRY C ON B.INDUSTRY_CD = C.INDUSTRY_CD
 						WHERE	A.MASTER_CD = $master_cd$ 
 								AND A.STATUS = 'N' 
-								AND	A.COMPANY_CD = B.COMPANY_CD 
-					) A 
 		]]>
 	</select>
 	
