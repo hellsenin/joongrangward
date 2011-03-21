@@ -42,7 +42,7 @@
     </div>
     <div class="login_area">
     
-        <form id="frm" name="frm" method="post" onsubmit="return checkForm(this);" action="/admin/loginPage.do" >
+        <form id="frm" name="frm" method="post" onsubmit="return checkForm(this);" action="/admin/login.do" >
     
         <fieldset>
         	<div class="login">
