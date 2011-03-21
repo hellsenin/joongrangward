@@ -70,12 +70,19 @@ function checkForm(form)
 
 
 </script>
+<div id="contents">
 <div class="comment_box">
 <div class="comment_box_top"></div>
 <div class="comment_box_in" style="background:url(/health/open_content/images/comment/comment_img_s_001.gif) 580px top no-repeat;">
     <ul class="list">
+	<li>
+	※ 정, 앰플 단위로 수량을 작성하고, 품명마다 규격 및 단위를 반드시 기재할 것. 
+	<br/><span class='ex_text'>(예: 품명 아티반정 규격및단위 0.5mg/정 수량 5,000 <br/>품명 제일염산날부핀주 규격 및 단위 10mg/ml/A 수량 1,000</span>
+	</li>
+<!-- 
         <li>정, 앰플 단위로 수량을 작성하고, 품명마다 규격및단위를 반드시 기재하세요.${year}</li>
         <li>(예: 품명 아티반정 규격및단위 0.5mg/정 수량 5000)</li>
+-->
     </ul>
 </div>
 <div class="comment_box_bottom"></div>
@@ -85,7 +92,7 @@ function checkForm(form)
 		<input type="hidden" name="company_cd" value="${company.company_cd}" />
 		<input type="hidden" name="company_id" value="${company.id}" />
 		<input type="hidden" name="company_name" value="${company.company}" />
-	<table class="default_view" summary="제목, 주관부서, 등록일, 조회수, 첨부파일, 내용으로 구성되어 있습니다.">
+	<table cellspacing="0" cellpadding="0" class="table_list" summary="제목, 주관부서, 등록일, 조회수, 첨부파일, 내용으로 구성되어 있습니다." >
 		<caption>민원서식 상세내용</caption>
 		<colgroup>
 			<col style="width:20%;"/>
@@ -94,15 +101,15 @@ function checkForm(form)
 		<tbody>
 			<tr>
 				<th scope="row">업소명</th>
-				<td class="output tal">${company.company}</td>
+				<td class="aleft tal">${company.company}</td>
 			</tr>
 			<tr>
 				<th scope="row">전화번호</th>
-				<td class="output tal">${company.tel}</td>
+				<td class="aleft tal">${company.tel}&nbsp;</td>
 			</tr>
 			<tr >
 				<th scope="row">작성자</th>
-				<td class="output tal">
+				<td class="aleft tal">
 					${company.ceo_name}
 				</td>
 			</tr>
@@ -111,7 +118,7 @@ function checkForm(form)
 <br/>
 <br/>
 	
-<table id="tbl" class="default_list" summary="번호,제목,공개여부, 작성자, 등록일, 첨부파일 구성">
+<table cellspacing="0" cellpadding="0" class="table_list" summary="번호,제목,공개여부, 작성자, 등록일, 첨부파일 구성">
     <caption>
     게시물리스트
     </caption>
@@ -156,3 +163,4 @@ function checkForm(form)
 	<span class="btn_del"><input type="submit" value="${empty result ? '등록' : '수정'}하기" /></span>
 </div>
 </form>
+</div>
