@@ -1828,22 +1828,36 @@ public class FreecheckAdminController {
 /* 관리자 로그인 체크 */	
 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */	
 	@RequestMapping("/admin/loginPage.do")
-	public String getlogin( HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+	public String loginPage( HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {    	
+		return "admin/loginPage";
+	}
+	
+	@RequestMapping("/admin/login.do")
+	public void login( HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	ZValue zvl = WebFactory.getAttributes(request);
     	String id          = zvl.getString("id");
     	String passwd      = zvl.getString("passwd");
-    	String storeId     = propertyService.getString("id");
-    	String storePasswd = propertyService.getString("passwd");
+    	String storePasswd     = propertyService.getString(id);
     	boolean res = false;
     	
     	
-    	if ( !"".equals(id) || id != null) {
-    		if(!"".equals(passwd) || passwd != null) {
-        		if(id.equals(storeId) && passwd.equals(storePasswd) ) res = true;
-        	} 
+    	if ( passwd.equals(storePasswd) ) {
+    		res = true;
     	} 
-    	
-    	return res==true ?  "freecheck/selectMasterCompanyPointList.do?industryCd=3" : "admin/loginPage";
+
+    	if(!res)
+    	{
+    		WebFactory.printHtml(response, "아이디또는 비밀번호 오류입니다.", "javascript:history.back();");
+    	}
+    	else
+    	{
+    		WebFactory.printHtml(response, "성공적으로 로그인되었습니다.", "/admin/index.do");
+    	}
     	
 	}
+	@RequestMapping("/admin/index.do")
+	public String index( HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {    	
+		return "admin/index";
+	}
+	
 }
