@@ -89,6 +89,10 @@ public class FreecheckUserDAO extends EgovAbstractDAO {
 	public List<HashMap> selectQuestion(Company bean) {
 		return (List<HashMap>) list("FreecheckUserDAO.selectQuestion", bean);
 	}
+
+	public List<HashMap> selectAnswerQuestionCd2(Company bean) {
+		return (List<HashMap>) list("FreecheckUserDAO.selectAnswerQuestionCd2", bean);
+	}
 	
 	/**
 	 * 점검 대상(HETB_CK_MASTER)에 대한 점검 항목 불러오기 (질문 불러오기 4/4) : 점검 항목의 선택할 수 있는 질문의 선택형 답변(?) 항목 (HETB_CK_QUESTION2) 불러오기
