@@ -118,7 +118,7 @@ function checkForm(form)
 <br/>
 <br/>
 	
-<table cellspacing="0" cellpadding="0" class="table_list" summary="번호,제목,공개여부, 작성자, 등록일, 첨부파일 구성">
+<table id="tbl" cellspacing="0" cellpadding="0" class="table_list" summary="번호,제목,공개여부, 작성자, 등록일, 첨부파일 구성">
     <caption>
     게시물리스트
     </caption>

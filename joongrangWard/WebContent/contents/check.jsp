@@ -108,7 +108,7 @@ function checkAndSubmit(f) {
 							<th>${qStatus.count}</th>
 							<td class="tal">
 								<dl>
-									<dt style="margin-top: 6px;">${fn:replace(questionItem.QUESTION,crlf,"")}</dt>
+									<dt style="margin-top: 6px;">${fn:replace(questionItem.QUESTION,crlf,"<br/>")}</dt>
 									<dd style="margin-top: 6px; margin-bottom: 6px;">
 										<!-- 주관식 -->
 										<c:choose>
@@ -132,7 +132,7 @@ function checkAndSubmit(f) {
 														<c:choose>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'Y'}">
 																<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">
-																<input type="checkbox" title="문제 ${qStatus.count}번" name="question2_cd_${qStatus.count}_${aStatus.count}" value="${answerItem.QUESTION2_CD}" id="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, answerItem.QUESTION2_CD) >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/><!-- [${questionItem.QUESTION2_CD},${answerItem.QUESTION2_CD}] -->
+																<input type="checkbox" title="문제 ${qStatus.count}번" name="question2_cd_q${qStatus.count}_q${aStatus.count}" value="${answerItem.QUESTION2_CD}" id="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}" <c:if test="${fn:indexOf(questionItem.QUESTION2_CD, answerItem.QUESTION2_CD) >= 0}">checked="checked"</c:if> <c:if test="${Bean.view_state == 'readonly'}"> disabled='disabled'</c:if>/>
 															</c:when>
 															<c:when test="${questionItem.MULTI_CHECK_YN == 'N'}">
 																<label for="answer2_${qStatus.count}_${answerItem.QUESTION2_CD}">

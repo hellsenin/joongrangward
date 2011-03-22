@@ -93,7 +93,7 @@
 				<div class="top_txt"><img src="/images/top_txt.gif" alt="의료기관 등 자율점검을 인터넷 방식으로 변경하였습니다. 의료기관 및 약국 등 각 업소 개설자(대표자)의 적극적인 협조를 부탁드리며, 발송된 공문과 서식 등을 참고하여 자율점검표를 성실히 기한 내에 입력하여 주시기 바랍니다." /></div>
 				<p class="btn_ri mb15"><a href="/health/bbs/selectBoardList.do?bbsId=BBSMSTR_000000001156"><img src="/images/btn_01.gif" alt="인터넷자율점검 작성방법 보기" /></a></p>
 			
-			<div class="notice ">지금은 자율점검 기간이 아닙니다.</div>
+			<!-- <div class="notice ">지금은 자율점검 기간이 아닙니다.</div> -->
 			
 			<h4 class="mt15">자율점검 시스템 로그인</h4>
 				<div class="login_box mt15">
