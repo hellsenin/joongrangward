@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -25,7 +26,9 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Service("FreecheckUserService")
 public class FreecheckUserService {
-	
+
+    Logger log = Logger.getLogger(this.getClass());
+
 	@Resource(name="FreecheckUserDAO")
 	private FreecheckUserDAO dao = null;
 	
@@ -209,8 +212,25 @@ public class FreecheckUserService {
 		
 		/* 질문 리스트 조회 (HETB_CK_QUESTION) */
 		List<HashMap> questionList = new ArrayList<HashMap>();
+		List<HashMap> answerQuestionCd2 = new ArrayList<HashMap>();
 		int master_cd = bean.getMaster_cd();
 		questionList = dao.selectQuestion(bean);
+		answerQuestionCd2 = dao.selectAnswerQuestionCd2(bean);
+		for(HashMap<String, Object> question : questionList)
+		{
+			String questionCd = question.get("QUESTION_CD").toString();
+			String questionCd2 = "";
+			for(HashMap<String, Object> answerQuestion : answerQuestionCd2)
+			{
+				String _questionCd = answerQuestion.get("QUESTION_CD").toString();
+				if(questionCd.equals(_questionCd))
+				{
+					questionCd2 += answerQuestion.get("QUESTION2_CD") + "|";
+				}
+			}
+			log.debug("QUESTION_CD2 >>>>>>> " + questionCd2);
+			question.put("QUESTION2_CD", questionCd2);
+		}
 		model.addAttribute("questionList", questionList);
 		
 		

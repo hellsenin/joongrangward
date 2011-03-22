@@ -87,6 +87,19 @@ public class FreecheckUserController {
 			WebFactory.printHtml(response, "성공적으로 로그인되었습니다.", "/health/freecheck/list.do?categoryId=2589");
 		}
 	}
+
+	@RequestMapping("/health/freecheck/logout.do")
+	public void logout(
+		@ModelAttribute("Bean") Company bean
+		, HttpServletRequest request
+		, HttpServletResponse response 
+		, ModelMap model) throws Exception {
+		// 로그인 체크 
+
+		HttpSession session = request.getSession();
+		session.removeAttribute("company");
+		WebFactory.printHtml(response, "성공적으로 로그아웃되었습니다.", "/health/freecheck/loginPage.do");
+	}
 	
 	@RequestMapping("/health/freecheck/list.do")
 	public String selectCheckStateList(
@@ -334,7 +347,7 @@ public class FreecheckUserController {
 					int checkboxCount = zvl.getInt("checkboxCount" + i);
 					for(int j=1; j<=checkboxCount; j++) {
 						
-						question2Cd = zvl.getInt("question2Cd"+i+""+j);
+						question2Cd = zvl.getInt("question2CdQ"+i+"Q"+j);
 						
 						Answer item = new Answer();
 						item.setQuestion2_cd(question2Cd);
