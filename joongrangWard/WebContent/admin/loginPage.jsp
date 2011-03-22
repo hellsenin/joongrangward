@@ -30,42 +30,37 @@
 	}	
 
 </script> 
-<h4>로그인</h4>
-<div class="comment_box">
-<div class="comment_box_top"></div>
-<div class="comment_box_in">
-	<div class="list_area">
-    	<ul class="login_list">
-        	<li class="tit"><img src="/health/open_content/images/comment/comment_tit_freecheck_login.gif" alt="아이디와 비밀번호를 입력해 주세요." /></li>
-            <li>아이디는 영문과 숫자만 입력가능</li>
+<link href="/css/login.css" rel="stylesheet" type="text/css" media="screen" />
+<dl id="login_Header">
+  <dt><img src="/images/top_logo.gif" alt="서울중랑구 의약업소 자율점검 시스템" /></dt>
+  <dd><strong><span>서울중랑구 의약업소 자율검검 시스템</span> 관리자 전용</strong> 페이지 입니다.</dd>
+
+</dl>
+
+<form id="frm" name="frm" method="post" onsubmit="return checkForm(this);" action="/admin/login.do" >
+<div class="login_Bg">
+  <p><img src="/images/admin/login_img_01.gif" width="302" height="55" alt="현재 보고 계신 페이지는 관리자 전용 페이지 입니다." /></p>
+  <div class="login_Wrap">
+    <div class="wrap_1000" style="background-color: #fff;">
+      <p><img src="/images/admin/login_img_02.gif" width="435" height="195" alt="관리자 아이디로 로그인 하시기 바랍니다." /></p>
+      <fieldset>
+        <ul>
+          <li>
+
+            <label for="id"><img src="/images/admin/label_id.gif" width="54" height="11" alt="아이디" /></label>
+            <input name="id" type="text" id="id" value="admin" class="txt txt_input" />
+          </li>
+          <li>
+            <label for="password"><img src="/images/admin/label_pw.gif" width="54" height="11" alt="비밀번호" /></label>
+            <input type="password" class="txt_input" name="passwd" id="password" title="비밀번호" value="admin"/>
+          </li>
         </ul>
-    </div>
-    <div class="login_area">
-    
-        <form id="frm" name="frm" method="post" onsubmit="return checkForm(this);" action="/admin/login.do" >
-    
-        <fieldset>
-        	<div class="login">
-            <ul>
-                <li>
-                <span style="width: 250px">
-                	<label for="id"><img src="/health/open_content/images/comment/login_id.gif" alt="아이디" /></label> 
-                	<input name="id" type="text" id="id" value="admin" class="txt" style="width:150px;"/>
-                </span>					
-                <span style="width: 250px">
-                	<label for="password"><img src="/health/open_content/images/comment/login_pw.gif" alt="비밀번호" /></label>
-                	<input name="passwd" type="password" id="password" value="admin" class="txt" style="width:150px;"/>
-                </span>
-                	<input type="image" src="/health/open_content/images/btn/btn_l_login.gif" alt="로그인" class="inbtn" />
-                </li>	
-            </ul>
-            </div>
-        </fieldset>	
-    
-        </form>
+        <input type="image" src="/images/admin/btn_login.gif" class="login_btn" />
 
+      </fieldset>
     </div>
+  </div>
 </div>
-<div class="comment_box_bottom"></div>
-</div>
+</form>
 
+<div id="login_Footer">Copyright(C) <span>서울중랑구 의약업소 자율점검 시스템</span>. All Rights Reserved.</div>

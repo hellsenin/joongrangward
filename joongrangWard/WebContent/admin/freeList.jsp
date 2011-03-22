@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored='false' %>
 <html>
 <head>
-<title>금천보건소 바로가기 페이지</title>
+<title>서울 중랑구 의약업소 자율점검 시스템</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
