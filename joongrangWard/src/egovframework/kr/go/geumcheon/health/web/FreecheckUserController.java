@@ -245,6 +245,7 @@ public class FreecheckUserController {
 			}
 			else
 			{
+				/*
 				Company param = new Company();
 				param.setId(bean.getCompany_id());
 				service.loginFreecheck(param, model);
@@ -265,6 +266,9 @@ public class FreecheckUserController {
 				
 				includePage = "/contents/list.jsp";	
 				model.addAttribute("view_state", "checked");
+				*/
+				String forwardUrl = "/health/freecheck/list.do?categoryId=2589";
+				WebFactory.printHtml(response, "수고하셨습니다. 미완료된 자율점검표를 확인하시어 계속 작성해 주십시오.", forwardUrl);
 			}
 		} 
 		
@@ -296,7 +300,7 @@ public class FreecheckUserController {
 		service.checkHandleitem(company, zvl);
 		
 		String forwardUrl = "/health/freecheck/list.do?categoryId=2589";
-		WebFactory.printHtml(response, "성공적으로 등록되었습니다.", forwardUrl);
+		WebFactory.printHtml(response, "수고하셨습니다. 미완료된 자율점검표를 확인하시어 계속 작성해 주십시오.", forwardUrl);
 	}
 	
 	
