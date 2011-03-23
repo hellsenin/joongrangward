@@ -10,6 +10,7 @@
 <div id="contents">
 <div id="contents">
 		<h4>${company.company} - ${company.ceo_name}님의 자율점검 리스트 입니다.</h4>
+		<div style="color:#f00;font-weight:bold;line-height:150%;padding:4px 0 0 0">일반구급차 자율점검표와 특수구급차 자율점검표는 보유하고 계신 차량의 숫자만큼만 자율점검을 해주세요.</div>
 </div>
 </br>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_list" summary="번호, 제목, 점검기간, 상태, 등록일자로 구성되어 있습니다. 목록 제목을 클릭하면 상세내용으로 이동합니다.">
@@ -87,7 +88,7 @@
 								미점검
 							</c:when>
 							<c:when test="${item.ANSWER2_CNT >= item.QUESTION_CNT}">
-								점검완료
+								<span style="color:blue;">점검완료</span>
 							</c:when>
 							<c:when test="${item.ANSWER_CNT == 1 and item.ANSWER2_CNT < item.QUESTION_CNT}">
 								미완료
