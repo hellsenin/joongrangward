@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -227,11 +228,16 @@ public class FreecheckUserController {
 		
 		// 점검표 체크 후 페이지 이동 
 		String includePage = "";
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>company : "+company);
 		if("writable".equals(bean.getView_state()) || "update".equals(bean.getView_state())) {
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>bean : "+bean);
 			String divideCd = company.getDivide_cd();
+			//String masterCdData = company.getMasterCdData();
+			//String[] mCdData = masterCdData.split(",");
+			//System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>company : "+ArrayUtils.toString(mCdData));
+			
 			//if("k10".equals(divideCd) || "k01".equals(divideCd) || "k02".equals(divideCd))
-			if(true)
+			
+			if(bean.getMaster_cd() == 2)
 			{
 				List<ZValue> handleItemList = service.selectHandleitemListU(company);
 				model.addAttribute("handleItemList", handleItemList);
