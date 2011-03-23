@@ -994,7 +994,8 @@
 							   GROUP BY z.MASTER_CD, y.TYPE_CD, y.TITLE, y.START_DT, y.END_DT
 							 ) b
 				ON b.MASTER_CD = a.MASTER_CD
-			ORDER BY TYPE_CD
+			LEFT OUTER JOIN HETB_CK_MASTER DD ON DD.MASTER_CD = a.MASTER_CD
+			ORDER BY dd.ORDR
     	]]>
     </select>
     
